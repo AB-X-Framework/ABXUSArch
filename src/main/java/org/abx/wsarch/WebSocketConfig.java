@@ -1,4 +1,4 @@
-package com.example.WSArch;
+package org.abx.wsarch;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
