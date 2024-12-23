@@ -1,4 +1,4 @@
-package com.example.WSArch;
+package org.abx.wsarch;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
