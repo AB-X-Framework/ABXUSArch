@@ -1,6 +1,8 @@
 
 package org.abx.ws.frames;
 
+import org.abx.util.Pair;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +21,7 @@ public class WebSocketFrame {
 
     private static Pair<FrameType, Boolean> getNextFrameType(InputStream inputStream) throws IOException {
         int firstByte = inputStream.read();
+        System.out.println("FIRST BIT "+firstByte);
         boolean fin = (firstByte & 128) > 1;
         FrameType ft;
         switch (firstByte & FRAME_OPCODE) {

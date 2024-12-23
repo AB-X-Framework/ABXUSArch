@@ -1,4 +1,4 @@
-package org.abx.ws.frames;
+package org.abx.util;
 
 import java.io.Serializable;
 
