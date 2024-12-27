@@ -1,10 +1,12 @@
 package org.abx.ws;
 
+import org.abx.util.StreamUtils;
 import org.abx.ws.frames.BinaryFrame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class WSReq {
@@ -25,8 +27,8 @@ public class WSReq {
                 URLEncoder.encode(value + "", StandardCharsets.UTF_8);
     }
 
-    public void setBody(ByteArrayInputStream body) {
-        data
+    public void setBody(ByteArrayInputStream body) throws IOException {
+        data = StreamUtils.readByteArrayStream(body);
     }
 
     public BinaryFrame getBinaryFrame() {
