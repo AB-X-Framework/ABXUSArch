@@ -3,7 +3,9 @@ package org.abx.ws;
 import org.abx.ws.frames.BinaryFrame;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class WSReq {
 
@@ -12,15 +14,33 @@ public class WSReq {
     public byte[] data;
 
     public WSReq(String method) {
-        this.method = method+"?";
+        this.method = method + "?";
     }
 
-    public void set(String key,String value) {
-        method+= URLEncoder.encode(key)+"="+URLEncoder.encode(value);
+    public void set(String key, Object value) {
+        if (value == null) {
+            value = "";
+        }
+        method += URLEncoder.encode(key, StandardCharsets.UTF_8) + "=" +
+                URLEncoder.encode(value + "", StandardCharsets.UTF_8);
     }
 
-    public void setBody(ByteArrayInputStream body) {}
+    public void setBody(ByteArrayInputStream body) {
+
+    }
+
     public BinaryFrame getBinaryFrame() {
-        return BinaryFrame.from()
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        if (data == null) {
+            baos.writeBytes("GET ".getBytes());
+        }else {
+            baos.writeBytes("POST ".getBytes());
+        }
+        baos.writeBytes(method.getBytes(StandardCharsets.UTF_8));
+        baos.writeBytes("\r\n\n".getBytes(StandardCharsets.UTF_8));
+        if (data != null) {
+            baos.writeBytes(data);
+        }
+        return BinaryFrame.from(baos.toByteArray());
     }
 }
