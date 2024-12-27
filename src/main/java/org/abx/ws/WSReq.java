@@ -26,7 +26,7 @@ public class WSReq {
     }
 
     public void setBody(ByteArrayInputStream body) {
-
+        data
     }
 
     public BinaryFrame getBinaryFrame() {
