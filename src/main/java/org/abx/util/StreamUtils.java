@@ -21,7 +21,7 @@ public class StreamUtils {
         byte[] data = new byte[1024];
         int size;
         while ((size = is.read(data)) >= 0) {
-            baos.write(data,0,size);
+            baos.write(data, 0, size);
         }
         is.close();
         return baos.toByteArray();
