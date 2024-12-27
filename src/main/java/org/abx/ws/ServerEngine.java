@@ -9,8 +9,19 @@ import org.abx.ws.frames.WebSocketFrame;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class ServerEngine {
+    private HashMap<String,Object> context;
+
+    public ServerEngine(){
+        context=new HashMap<>();
+    }
+
+    public void addController(String name, Object obj){
+        context.put(name,obj);
+    }
+
     public void ws() throws Exception {
         ServerSocket  serverSocket = new ServerSocket(8080);
         Socket client = serverSocket.accept();
