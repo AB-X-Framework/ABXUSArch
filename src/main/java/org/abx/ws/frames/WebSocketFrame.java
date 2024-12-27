@@ -52,8 +52,6 @@ public class WebSocketFrame {
     public static Frame readFrame(InputStream inputStream) throws IOException {
         Pair<FrameType, Boolean> frame = getNextFrameType(inputStream);
         switch (frame.first) {
-            case Text:
-                return TextFrame.from(readTextFrame(inputStream, frame.second));
             case Binary:
             case Continuation:
                 return BinaryFrame.from(readBinaryFrame(inputStream,frame.second));
@@ -195,9 +193,6 @@ public class WebSocketFrame {
 
     public static void writeFrame(OutputStream outputStream, Frame frame) throws IOException {
         switch (frame.getType()) {
-            case Text:
-                writeTextFrame(outputStream, ((TextFrame) frame).getText());
-                break;
             case Binary:
                 writeBinaryFrame(outputStream, ((BinaryFrame) frame).getByteArray());
                 break;
