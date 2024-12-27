@@ -55,10 +55,6 @@ public class WebSocketFrame {
             case Binary:
             case Continuation:
                 return BinaryFrame.from(readBinaryFrame(inputStream,frame.second));
-            case Ping:
-                return PingFrame.get();
-            case Pong:
-                return PongFrame.get();
             case ConnectionClose:
                 return CloseFrame.get();
         }
