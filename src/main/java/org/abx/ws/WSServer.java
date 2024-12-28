@@ -17,6 +17,10 @@ import java.util.concurrent.Semaphore;
 public class WSServer extends WSEngine {
 
     public HashMap<String, WSClient> clients;
+
+    public WSServer() {
+        clients = new HashMap<>();
+    }
     public void start(int port) throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
         while (true) {
@@ -25,10 +29,12 @@ public class WSServer extends WSEngine {
                 new Thread(() -> {
                     try {
                         WSClient wsClient = new WSClient(client);
+                        String id = wsClient.process
+                                (new WSReq("_client/getClientId")).asString();
+                        clients.put(id, wsClient);
                     } catch (Exception e) {
                         ExceptionHandler.handleException(e);
                     }
-
                     handle(client);
                 }).start();
             } catch (IOException e) {
@@ -36,11 +42,5 @@ public class WSServer extends WSEngine {
             }
         }
     }
-
-
-
-
-
-
 
 }
