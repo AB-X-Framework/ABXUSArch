@@ -33,7 +33,7 @@ public class WSReq {
         data = StreamUtils.readByteArrayStream(body);
     }
 
-    public BinaryFrame getBinaryFrame() {
+    public BinaryFrame toFrame() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (data == null) {
             baos.writeBytes("GET ".getBytes());
