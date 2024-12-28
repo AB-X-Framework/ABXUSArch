@@ -7,12 +7,14 @@ import org.abx.ws.frames.BinaryFrame;
 import org.abx.ws.frames.CloseFrame;
 import org.abx.ws.frames.Frame;
 import org.abx.ws.frames.WebSocketFrame;
+import org.abx.ws.msg.WSMsg;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -66,7 +68,23 @@ public class WSEngine {
     }
 
     private void process(BinaryFrame frame, OutputStream out) throws Exception {
-        WSReq req = WSReq.fromFrame(frame);
+        WSMsg msg = WSMsg.fromFrame(frame);
+        if (msg  instanceof WSReq) {
+            process((WSReq) msg,out);
+        }else {
+            process((WSRes) msg);
+        }
+
+    }
+
+    private void process(WSRes req)throws Exception {
+        String id = req.getID();
+        responses.put(id, req);
+        Semaphore semaphore = requests.get(id);
+        semaphore.release();
+    }
+
+    private void process(WSReq req, OutputStream out)throws Exception {
         String method = req.method;
         int classIndex = method.indexOf('/');
         String className = method.substring(0, classIndex);
@@ -85,7 +103,6 @@ public class WSEngine {
             res.body = result.toString().getBytes(StandardCharsets.UTF_8);
         }
         WebSocketFrame.writeFrame(out, res.toFrame());
-
     }
 
 

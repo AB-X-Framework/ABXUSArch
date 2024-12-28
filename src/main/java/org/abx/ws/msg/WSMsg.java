@@ -15,10 +15,11 @@ import java.util.Map;
 
 public class WSMsg {
     protected final static String ID = "ID";
+    protected final static byte[] OK = "OK".getBytes(StandardCharsets.UTF_8);
     protected final static byte[] Line = "\r\n".getBytes();
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
-    protected HashMap<String,String> headers;
+    protected HashMap<String, String> headers;
     public byte[] body;
 
     public WSMsg() {
@@ -33,31 +34,40 @@ public class WSMsg {
         for (String header : headersText.split("\r\n")) {
             int index = header.indexOf(':');
             String key = header.substring(0, index);
-            String value = header.substring(index+1);
-            headers.put(key,value);
+            String value = header.substring(index + 1);
+            headers.put(key, value);
         }
     }
 
     public void putHeader(String key, String value) {
-        headers.put(key,value);
+        headers.put(key, value);
     }
+
     public String getHeader(String key) {
         return headers.get(key);
     }
 
-    protected Pair<String, InputStream> processHeaders(BinaryFrame frame) throws IOException {
+    public static WSMsg fromFrame(BinaryFrame frame) throws IOException {
         byte[] data = frame.getByteArray();
+        if (StreamUtils.startsWith(data, OK)) {
+            return WSRes.from(data);
+        } else {
+            return WSReq.from(data);
+        }
+    }
+
+    protected Pair<String, InputStream> processHeaders(byte[] data) throws IOException {
         int firstLine = StreamUtils.indexOf(data, Line);
-        int index = StreamUtils.indexOf(data, DoubleLine,firstLine);
-        firstLine +=2;
-        String headers = new String(data, firstLine , index-firstLine);
+        int index = StreamUtils.indexOf(data, DoubleLine, firstLine);
+        firstLine += 2;
+        String headers = new String(data, firstLine, index - firstLine);
         setHeaders(headers);
-        return new Pair<>(new String(data,0,firstLine),
-                new ByteArrayInputStream(data,index+4,data.length-(index+4)));
+        return new Pair<>(new String(data, 0, firstLine),
+                new ByteArrayInputStream(data, index + 4, data.length - (index + 4)));
     }
 
     protected void processHeaders(ByteArrayOutputStream baos) {
-        for (Map.Entry<String,String> header:headers.entrySet()){
+        for (Map.Entry<String, String> header : headers.entrySet()) {
             baos.writeBytes(header.getKey().getBytes(StandardCharsets.UTF_8));
             baos.writeBytes(": ".getBytes(StandardCharsets.UTF_8));
             baos.writeBytes(header.getValue().getBytes(StandardCharsets.UTF_8));

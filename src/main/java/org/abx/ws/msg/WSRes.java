@@ -23,7 +23,7 @@ public class WSRes extends WSMsg{
 
     public BinaryFrame toFrame() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.write("OK".getBytes());
+        baos.write(OK);
         baos.write(Line);
         processHeaders(baos);
         if (body != null) {
@@ -31,9 +31,10 @@ public class WSRes extends WSMsg{
         }
         return BinaryFrame.from(baos.toByteArray());
     }
-    public static WSRes from(BinaryFrame frame) throws IOException {
+
+    public static WSRes from(byte[] data) throws IOException {
         WSRes res = new WSRes();
-        Pair<String, InputStream> processed = res.processHeaders(frame);
+        Pair<String, InputStream> processed = res.processHeaders(data);
         res.body = StreamUtils.readByteArrayStream(processed.second);
         return res;
     }

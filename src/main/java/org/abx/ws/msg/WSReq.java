@@ -57,7 +57,7 @@ public class WSReq extends WSMsg{
         return BinaryFrame.from(baos.toByteArray());
     }
 
-    public static WSReq fromFrame(BinaryFrame frame)throws IOException{
+    public static WSReq from(byte[] frame)throws IOException{
         WSReq req = new WSReq();
         Pair<String, InputStream> processed = req.processHeaders(frame);
         String firstLine = processed.first;

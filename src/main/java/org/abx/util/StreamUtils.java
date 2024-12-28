@@ -88,5 +88,21 @@ public class StreamUtils {
         return -1; // No match found
     }
 
+    public static boolean startsWith(byte[] source, byte[] target) {
+        if (source == null || target == null) {
+            return false;
+        }
+        // If target is longer than source, source cannot start with target
+        if (target.length > source.length) {
+            return false;
+        }
+        // Compare each byte in the target with the corresponding byte in the source
+        for (int i = 0; i < target.length; i++) {
+            if (source[i] != target[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
