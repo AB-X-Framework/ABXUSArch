@@ -5,6 +5,7 @@ import org.abx.ws.frames.BinaryFrame;
 import org.abx.ws.frames.CloseFrame;
 import org.abx.ws.frames.Frame;
 import org.abx.ws.frames.WebSocketFrame;
+import org.abx.ws.msg.WSReq;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -34,14 +35,16 @@ public class WSEngine {
                 }
                 if (f instanceof BinaryFrame) {
                     new Thread(() -> {
-                        System.out.println("WebSocketFrame " +
-                                ((BinaryFrame) f).getByteArray()
-                        );
+                        process((BinaryFrame) f);
                     }).start();
                 }
             }
         } catch (IOException e) {
             ExceptionHandler.handleException(e);
         }
+    }
+
+    private void process(BinaryFrame request) {
+        Req req = WSReq.f
     }
 }

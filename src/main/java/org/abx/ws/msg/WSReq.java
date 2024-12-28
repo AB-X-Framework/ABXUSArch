@@ -8,17 +8,15 @@ import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
-public class WSReq {
+public class WSReq extends WSMsg{
 
-    public String id;
     public String method;
-
-    public byte[] data;
 
     public WSReq(String method) {
         this.method = method + "?";
-        id = Math.random() + "";
+        putHeader("ID",Math.random() + "");
     }
 
     public void set(String key, Object value) {
@@ -29,24 +27,33 @@ public class WSReq {
                 URLEncoder.encode(value + "", StandardCharsets.UTF_8);
     }
 
-    public void setBody(ByteArrayInputStream body) throws IOException {
-        data = StreamUtils.readByteArrayStream(body);
+    public void setBody(ByteArrayInputStream bodySt) throws IOException {
+        body = StreamUtils.readByteArrayStream(bodySt);
     }
 
     public BinaryFrame toFrame() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (data == null) {
+        if (body == null) {
             baos.writeBytes("GET ".getBytes());
         }else {
             baos.writeBytes("POST ".getBytes());
         }
         baos.writeBytes(method.getBytes(StandardCharsets.UTF_8));
-        baos.writeBytes("\r\n".getBytes(StandardCharsets.UTF_8));
-        baos.writeBytes(("ID: "+id).getBytes(StandardCharsets.UTF_8));
-        baos.writeBytes("\r\n\r\n".getBytes(StandardCharsets.UTF_8));
-        if (data != null) {
-            baos.writeBytes(data);
+        baos.writeBytes(Line);
+        for (Map.Entry<String,String> header:headers.entrySet()){
+            baos.writeBytes(header.getKey().getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(": ".getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(header.getValue().getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(Line);
+        }
+        baos.writeBytes(DoubleLine);
+        if (body != null) {
+            baos.writeBytes(body);
         }
         return BinaryFrame.from(baos.toByteArray());
+    }
+
+    public static WSReq fromFrame(BinaryFrame frame) {
+
     }
 }
