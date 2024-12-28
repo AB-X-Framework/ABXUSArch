@@ -52,7 +52,6 @@ public class WSEngine {
                         return;
                     }
                     if (frame instanceof BinaryFrame) {
-                        System.out.println("FRAME\n'"+new String(((BinaryFrame) frame).getByteArray())+"'");
                         new Thread(() -> {
                             try {
                                 process((BinaryFrame) frame, out);
