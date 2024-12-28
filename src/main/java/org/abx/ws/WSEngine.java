@@ -14,13 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
@@ -54,6 +52,7 @@ public class WSEngine {
                         return;
                     }
                     if (frame instanceof BinaryFrame) {
+                        System.out.println("FRAME\n'"+new String(((BinaryFrame) frame).getByteArray())+"'");
                         new Thread(() -> {
                             try {
                                 process((BinaryFrame) frame, out);
@@ -104,6 +103,7 @@ public class WSEngine {
         } else {
             res.body = result.toString().getBytes(StandardCharsets.UTF_8);
         }
+        System.out.print("PROCESSED "+res.body);
         WebSocketFrame.writeFrame(out, res.toFrame());
     }
 

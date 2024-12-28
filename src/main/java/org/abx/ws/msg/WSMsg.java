@@ -73,7 +73,7 @@ public class WSMsg {
             baos.writeBytes(header.getValue().getBytes(StandardCharsets.UTF_8));
             baos.writeBytes(Line);
         }
-        baos.writeBytes(DoubleLine);
+        baos.writeBytes(Line);
 
     }
 
