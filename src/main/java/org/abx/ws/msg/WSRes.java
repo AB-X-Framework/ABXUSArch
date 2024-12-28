@@ -1,4 +1,4 @@
-package org.abx.ws;
+package org.abx.ws.msg;
 
 import org.abx.util.StreamUtils;
 import org.abx.ws.frames.BinaryFrame;
