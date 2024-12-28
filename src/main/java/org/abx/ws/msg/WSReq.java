@@ -25,6 +25,10 @@ public class WSReq extends WSMsg{
 
     }
 
+    public WSRes createRes(){
+        return new WSRes(getHeader(ID));
+    }
+
     public void set(String key, Object value) {
         if (value == null) {
             value = "";

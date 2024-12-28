@@ -7,6 +7,7 @@ import org.abx.ws.frames.Frame;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -18,6 +19,17 @@ public class WSRes extends WSMsg{
     }
     protected WSRes(){
 
+    }
+
+    public BinaryFrame toFrame() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write("OK".getBytes());
+        baos.write(Line);
+        processHeaders(baos);
+        if (body != null) {
+            baos.write(body);
+        }
+        return BinaryFrame.from(baos.toByteArray());
     }
     public static WSRes from(BinaryFrame frame) throws IOException {
         WSRes res = new WSRes();

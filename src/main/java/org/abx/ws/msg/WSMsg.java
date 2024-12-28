@@ -19,7 +19,7 @@ public class WSMsg {
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
     protected HashMap<String,String> headers;
-    protected byte[] body;
+    public byte[] body;
 
     public WSMsg() {
         headers = new HashMap<>();
