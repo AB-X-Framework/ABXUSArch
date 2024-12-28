@@ -1,12 +1,22 @@
 package org.abx.ws.msg;
 
+import org.abx.util.Pair;
+import org.abx.util.StreamUtils;
+import org.abx.ws.frames.BinaryFrame;
+import org.abx.ws.frames.Frame;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 
 public class WSMsg {
-
-    protected static byte[] Line = "\r\n".getBytes();
-    protected static byte[] DoubleLine = "\r\n\r\n".getBytes();
-
+    protected final static String ID = "ID";
+    protected final static byte[] Line = "\r\n".getBytes();
+    protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
     protected HashMap<String,String> headers;
     protected byte[] body;
@@ -29,6 +39,28 @@ public class WSMsg {
     }
     public String getHeader(String key) {
         return headers.get(key);
+    }
+
+    protected Pair<String, InputStream> processHeaders(BinaryFrame frame) throws IOException {
+        byte[] data = frame.getByteArray();
+        int firstLine = StreamUtils.indexOf(data, Line);
+        int index = StreamUtils.indexOf(data, DoubleLine,firstLine);
+        firstLine +=2;
+        String headers = new String(data, firstLine , index-firstLine);
+        setHeaders(headers);
+        return new Pair<>(new String(data,0,firstLine),
+                new ByteArrayInputStream(data,index+4,data.length-(index+4)));
+    }
+
+    protected void processHeaders(ByteArrayOutputStream baos) {
+        for (Map.Entry<String,String> header:headers.entrySet()){
+            baos.writeBytes(header.getKey().getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(": ".getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(header.getValue().getBytes(StandardCharsets.UTF_8));
+            baos.writeBytes(Line);
+        }
+        baos.writeBytes(DoubleLine);
+
     }
 
 }

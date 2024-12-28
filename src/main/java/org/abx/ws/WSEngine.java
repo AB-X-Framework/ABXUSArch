@@ -28,14 +28,18 @@ public class WSEngine {
     public void handle(Socket client) {
         try {
             while (true) {
-                Frame f = WebSocketFrame.readFrame(client.getInputStream());
-                if (f instanceof CloseFrame) {
+                Frame frame = WebSocketFrame.readFrame(client.getInputStream());
+                if (frame instanceof CloseFrame) {
                     client.close();
                     return;
                 }
-                if (f instanceof BinaryFrame) {
+                if (frame instanceof BinaryFrame) {
                     new Thread(() -> {
-                        process((BinaryFrame) f);
+                        try {
+                            process((BinaryFrame) frame);
+                        } catch (IOException e) {
+                            ExceptionHandler.handleException(e);
+                        }
                     }).start();
                 }
             }
@@ -44,7 +48,7 @@ public class WSEngine {
         }
     }
 
-    private void process(BinaryFrame request) {
-        Req req = WSReq.f
+    private void process(BinaryFrame frame) throws IOException {
+        WSReq req = WSReq.fromFrame(frame);
     }
 }

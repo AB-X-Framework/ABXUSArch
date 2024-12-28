@@ -1,5 +1,6 @@
 package org.abx.ws.msg;
 
+import org.abx.util.Pair;
 import org.abx.util.StreamUtils;
 import org.abx.ws.frames.BinaryFrame;
 import org.abx.ws.frames.Frame;
@@ -7,33 +8,23 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 public class WSRes extends WSMsg{
 
-
-    public WSRes() {
-        headers = new HashMap<String,String>();
+    public WSRes(String id) {
+        putHeader(ID,id);
     }
+    protected WSRes(){
 
-    public static WSRes fromFrame(Frame frame) throws IOException {
-        BinaryFrame binaryFrame = (BinaryFrame) frame;
+    }
+    public static WSRes from(BinaryFrame frame) throws IOException {
         WSRes res = new WSRes();
-        byte[] data = binaryFrame.getByteArray();
-        int firstLine = StreamUtils.indexOf(data, Line);
-        int index = StreamUtils.indexOf(data, DoubleLine,firstLine);
-        firstLine +=2;
-        String headers = new String(data, firstLine , index-firstLine);
-        res.headers.put(headers, headers);
-
-        ByteArrayInputStream in = new
-                ByteArrayInputStream(data,index,data.length-index);
-        res.body = StreamUtils.readByteArrayStream(in);
+        Pair<String, InputStream> processed = res.processHeaders(frame);
+        res.body = StreamUtils.readByteArrayStream(processed.second);
         return res;
     }
-
-
-
     public byte[] asByteArray() {
         return body;
     }
