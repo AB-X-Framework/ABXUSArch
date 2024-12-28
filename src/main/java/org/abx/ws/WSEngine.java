@@ -23,12 +23,14 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 public class WSEngine {
-    protected HashMap<String, Pair<Object, HashMap<String, Method>>> context;
-    protected HashMap<String, Semaphore> requests;
+    protected final HashMap<String, Pair<Object, HashMap<String, Method>>> context;
+    protected final HashMap<String, Semaphore> requests;
+    protected final HashMap<String, WSRes> responses;
 
     public WSEngine() {
         context = new HashMap<>();
         requests = new HashMap<>();
+        responses = new HashMap<>();
     }
 
     public void addController(String name, Object obj) {

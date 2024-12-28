@@ -1,5 +1,6 @@
 package org.abx.ws;
 
+import org.abx.ws.frames.WebSocketFrame;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
 
@@ -28,7 +29,9 @@ public class WSClient extends WSEngine {
     public WSRes process(WSReq req) throws Exception {
         Semaphore reqSem = new Semaphore(1);
         reqSem.acquire();
-        requests.put(req.id, reqSem);
+        requests.put(req.getID(), reqSem);
+        WebSocketFrame.writeFrame(client.getOutputStream(),req.toFrame());
+        reqSem.acquire();
 
     }
 }

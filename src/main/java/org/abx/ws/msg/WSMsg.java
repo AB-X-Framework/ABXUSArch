@@ -25,6 +25,10 @@ public class WSMsg {
         headers = new HashMap<>();
     }
 
+    public String getID() {
+        return headers.get(ID);
+    }
+
     private void setHeaders(String headersText) {
         for (String header : headersText.split("\r\n")) {
             int index = header.indexOf(':');
