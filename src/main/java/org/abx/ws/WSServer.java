@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 public class WSServer extends WSEngine {
-
+    ServerSocket serverSocket;
     public HashMap<String, WSClient> clients;
 
     public ArrayList<WSClientListener> listeners;
@@ -25,31 +25,35 @@ public class WSServer extends WSEngine {
         clients = new HashMap<>();
         listeners = new ArrayList<>();
     }
+
     public void addClientListener(WSClientListener listener) {
         listeners.add(listener);
     }
+
     public void start(int port) throws Exception {
-        ServerSocket serverSocket = new ServerSocket(port);
-        while (true) {
+        serverSocket = new ServerSocket(port);
+        new Thread(() -> {
             try {
-                Socket client = serverSocket.accept();
-                new Thread(() -> {
-                    try {
-                        WSClient wsClient = new WSClient(client);
-                        String clientId = wsClient.process
-                                (new WSReq("_client/getClientId")).asString();
-                        clientConnected(clientId);
-                        clients.put(clientId, wsClient);
-                        handle(client);
-                        clientDisconnected(clientId);
-                    } catch (Exception e) {
-                        ExceptionHandler.handleException(e);
-                    }
-                }).start();
+                while (true) {
+                    Socket client = serverSocket.accept();
+                    new Thread(() -> {
+                        try {
+                            WSClient wsClient = new WSClient(client);
+                            String clientId = wsClient.process
+                                    (new WSReq("_client/getClientId")).asString();
+                            clientConnected(clientId);
+                            clients.put(clientId, wsClient);
+                            handle(client);
+                            clientDisconnected(clientId);
+                        } catch (Exception e) {
+                            ExceptionHandler.handleException(e);
+                        }
+                    }).start();
+                }
             } catch (IOException e) {
                 ExceptionHandler.handleException(e);
             }
-        }
+        }).start();
     }
 
     private void clientConnected(String clientId) {

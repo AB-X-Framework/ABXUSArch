@@ -3,7 +3,6 @@ package org.abx.ws.msg;
 import org.abx.util.Pair;
 import org.abx.util.StreamUtils;
 import org.abx.ws.frames.BinaryFrame;
-import org.abx.ws.frames.Frame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,9 +31,9 @@ public class WSMsg {
 
     private void setHeaders(String headersText) {
         for (String header : headersText.split("\r\n")) {
-            int index = header.indexOf(':');
+            int index = header.indexOf(": ");
             String key = header.substring(0, index);
-            String value = header.substring(index + 1);
+            String value = header.substring(index + 2);
             headers.put(key, value);
         }
     }
@@ -57,12 +56,13 @@ public class WSMsg {
     }
 
     protected Pair<String, InputStream> processHeaders(byte[] data) throws IOException {
-        int firstLine = StreamUtils.indexOf(data, Line);
-        int index = StreamUtils.indexOf(data, DoubleLine, firstLine);
-        firstLine += 2;
-        String headers = new String(data, firstLine, index - firstLine);
+        int firstLineIndex = StreamUtils.indexOf(data, Line);
+        String firstLine = new String(data, 0,firstLineIndex);
+        int index = StreamUtils.indexOf(data, DoubleLine, firstLineIndex);
+        firstLineIndex += 2;
+        String headers = new String(data, firstLineIndex, index - firstLineIndex);
         setHeaders(headers);
-        return new Pair<>(new String(data, 0, firstLine),
+        return new Pair<>(firstLine,
                 new ByteArrayInputStream(data, index + 4, data.length - (index + 4)));
     }
 

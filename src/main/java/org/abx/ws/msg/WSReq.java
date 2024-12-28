@@ -29,12 +29,13 @@ public class WSReq extends WSMsg{
         return new WSRes(getHeader(ID));
     }
 
-    public void set(String key, Object value) {
+    public WSReq set(String key, Object value) {
         if (value == null) {
             value = "";
         }
         method += URLEncoder.encode(key, StandardCharsets.UTF_8) + "=" +
                 URLEncoder.encode(value + "", StandardCharsets.UTF_8);
+        return this;
     }
 
     public void setBody(ByteArrayInputStream bodySt) throws IOException {
@@ -65,6 +66,11 @@ public class WSReq extends WSMsg{
         req.method = firstLine.substring(0, space);
         if (firstLine.startsWith("POST")) {
             req.body = StreamUtils.readByteArrayStream(processed.second);
+            //POST
+            req.method = firstLine.substring(5);
+        }else {
+            //GET
+            req.method = firstLine.substring(4);
         }
         return req;
     }

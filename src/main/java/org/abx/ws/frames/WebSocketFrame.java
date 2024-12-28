@@ -21,7 +21,6 @@ public class WebSocketFrame {
 
     private static Pair<FrameType, Boolean> getNextFrameType(InputStream inputStream) throws IOException {
         int firstByte = inputStream.read();
-        System.out.println("FIRST BIT "+firstByte);
         boolean fin = (firstByte & 128) > 1;
         FrameType ft;
         switch (firstByte & FRAME_OPCODE) {
@@ -57,8 +56,9 @@ public class WebSocketFrame {
                 return BinaryFrame.from(readBinaryFrame(inputStream,frame.second));
             case ConnectionClose:
                 return CloseFrame.get();
+            default:
+                throw new IOException("Unknown frame type: " + frame.first);
         }
-        throw new IOException("unknown frame type");
     }
 
     private static int getPayloadSize(InputStream inputStream, int b) throws IOException {

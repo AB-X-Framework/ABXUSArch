@@ -44,47 +44,49 @@ public class WSEngine {
     }
 
     public void handle(Socket client) {
-        try {
-            OutputStream out = client.getOutputStream();
-            while (true) {
-                Frame frame = WebSocketFrame.readFrame(client.getInputStream());
-                if (frame instanceof CloseFrame) {
-                    client.close();
-                    return;
+        new Thread(() -> {
+            try {
+                OutputStream out = client.getOutputStream();
+                while (true) {
+                    Frame frame = WebSocketFrame.readFrame(client.getInputStream());
+                    if (frame instanceof CloseFrame) {
+                        client.close();
+                        return;
+                    }
+                    if (frame instanceof BinaryFrame) {
+                        new Thread(() -> {
+                            try {
+                                process((BinaryFrame) frame, out);
+                            } catch (Exception e) {
+                                ExceptionHandler.handleException(e);
+                            }
+                        }).start();
+                    }
                 }
-                if (frame instanceof BinaryFrame) {
-                    new Thread(() -> {
-                        try {
-                            process((BinaryFrame) frame, out);
-                        } catch (Exception e) {
-                            ExceptionHandler.handleException(e);
-                        }
-                    }).start();
-                }
+            } catch (IOException e) {
+                ExceptionHandler.handleException(e);
             }
-        } catch (IOException e) {
-            ExceptionHandler.handleException(e);
-        }
+        }).start();
     }
 
     private void process(BinaryFrame frame, OutputStream out) throws Exception {
         WSMsg msg = WSMsg.fromFrame(frame);
-        if (msg  instanceof WSReq) {
-            process((WSReq) msg,out);
-        }else {
+        if (msg instanceof WSReq) {
+            process((WSReq) msg, out);
+        } else {
             process((WSRes) msg);
         }
 
     }
 
-    private void process(WSRes req)throws Exception {
+    private void process(WSRes req) throws Exception {
         String id = req.getID();
         responses.put(id, req);
         Semaphore semaphore = requests.get(id);
         semaphore.release();
     }
 
-    private void process(WSReq req, OutputStream out)throws Exception {
+    private void process(WSReq req, OutputStream out) throws Exception {
         String method = req.method;
         int classIndex = method.indexOf('/');
         String className = method.substring(0, classIndex);
@@ -209,6 +211,9 @@ public class WSEngine {
 
     private HashMap<String, Object> params(String params) {
         HashMap<String, Object> map = new HashMap<>();
+        if (params.isBlank()) {
+            return map;
+        }
         for (String param : params.split("&")) {
             int idx = param.indexOf('=');
             String key = URLDecoder.decode(param.substring(0, idx), StandardCharsets.UTF_8);
