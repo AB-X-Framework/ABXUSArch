@@ -34,7 +34,7 @@ public class WSReq extends WSMsg{
             value = "";
         }
         method += URLEncoder.encode(key, StandardCharsets.UTF_8) + "=" +
-                URLEncoder.encode(value + "", StandardCharsets.UTF_8);
+                URLEncoder.encode(value + "", StandardCharsets.UTF_8)+"&";
         return this;
     }
 

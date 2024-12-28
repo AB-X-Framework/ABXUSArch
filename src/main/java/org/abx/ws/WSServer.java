@@ -37,13 +37,13 @@ public class WSServer extends WSEngine {
                 while (true) {
                     Socket client = serverSocket.accept();
                     new Thread(() -> {
-                        try {
+                        try {;
+                            handle(client);
                             WSClient wsClient = new WSClient(client);
                             String clientId = wsClient.process
                                     (new WSReq("_client/getClientId")).asString();
                             clientConnected(clientId);
                             clients.put(clientId, wsClient);
-                            handle(client);
                             clientDisconnected(clientId);
                         } catch (Exception e) {
                             ExceptionHandler.handleException(e);

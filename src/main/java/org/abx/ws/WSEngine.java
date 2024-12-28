@@ -92,6 +92,8 @@ public class WSEngine {
         int methodIndex = method.indexOf('?', classIndex + 1);
         String methodName = method.substring(classIndex + 1, methodIndex);
         HashMap<String, Object> params = params(method.substring(methodIndex + 1));
+        System.out.println("CLASS"+className + "." + methodName+"= "+
+                (method.substring(methodIndex + 1)));
         params.put("body", req.body);
         Pair<Object, HashMap<String, Method>> obj = context.get(className);
         Object result = process(obj.first, obj.second.get(methodName), params);
