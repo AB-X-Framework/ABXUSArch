@@ -146,31 +146,9 @@ public class WSEngine {
      * @return
      */
     private static boolean isPrimitive(Class c) {
-        if (Integer.class == c) {
-            return true;
-        }
-        if (Long.class == c) {
-            return true;
-        }
-        if (Double.class == c) {
-            return true;
-        }
-        if (Character.class == c) {
-            return true;
-        }
-        if (Short.class == c) {
-            return true;
-        }
-        if (Byte.class == c) {
-            return true;
-        }
-        if (Float.class == c) {
-            return true;
-        }
-        if (Boolean.class == c) {
-            return true;
-        }
-        if (c.isEnum()) {
+        if (Integer.class == c || Long.class == c || Double.class == c ||
+                Character.class == c || Short.class == c || Byte.class == c ||
+                Float.class == c || Boolean.class == c || c.isEnum()) {
             return true;
         }
         return c.isPrimitive();
