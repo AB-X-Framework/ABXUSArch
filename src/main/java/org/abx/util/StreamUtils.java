@@ -63,4 +63,30 @@ public class StreamUtils {
         return -1; // No match found
     }
 
+    public static int indexOf(byte[] source, byte[] target, int from) {
+        if (source == null || target == null || target.length == 0) {
+            return -1;
+        }
+        int sourceLength = source.length;
+        int targetLength = target.length;
+        // Validate the from index
+        if (from < 0 || from >= sourceLength || targetLength > sourceLength - from) {
+            return -1;
+        }
+        for (int i = from; i <= sourceLength - targetLength; i++) {
+            int j;
+            for (j = 0; j < targetLength; j++) {
+                if (source[i + j] != target[j]) {
+                    break;
+                }
+            }
+            // If the loop completed, we found a match
+            if (j == targetLength) {
+                return i;
+            }
+        }
+        return -1; // No match found
+    }
+
+
 }
