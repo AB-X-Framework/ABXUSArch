@@ -20,8 +20,10 @@ public class WSClient extends WSEngine {
         handle(client);
     }
 
-    public WSClient(Socket client)  {
+    public WSClient(Socket client, WSServer server)   {
+        super(server);
         this.client = client;
+        handle(client);
     }
 
     @WSMethod(params={})

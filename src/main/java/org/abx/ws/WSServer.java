@@ -37,9 +37,8 @@ public class WSServer extends WSEngine {
                 while (true) {
                     Socket client = serverSocket.accept();
                     new Thread(() -> {
-                        try {;
-                            handle(client);
-                            WSClient wsClient = new WSClient(client);
+                        try {
+                            WSClient wsClient = new WSClient(client, this);
                             String clientId = wsClient.process
                                     (new WSReq("_client/getClientId")).asString();
                             clientConnected(clientId);

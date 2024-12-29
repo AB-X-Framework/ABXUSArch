@@ -26,11 +26,20 @@ public class WSEngine {
     protected final HashMap<String, Pair<Object, HashMap<String, Method>>> context;
     protected final HashMap<String, Semaphore> requests;
     protected final HashMap<String, WSRes> responses;
+    private final WSServer server;
 
     public WSEngine() {
         context = new HashMap<>();
         requests = new HashMap<>();
         responses = new HashMap<>();
+        server = null;
+    }
+
+    public WSEngine(WSServer server) {
+        context = new HashMap<>();
+        requests = new HashMap<>();
+        responses = new HashMap<>();
+        this.server = server;
     }
 
     public void addController(String name, Object obj) {
@@ -80,29 +89,36 @@ public class WSEngine {
     private void process(WSRes req) throws Exception {
         String id = req.getID();
         responses.put(id, req);
-        Semaphore semaphore = requests.get(id);
+        Semaphore semaphore = requests.remove(id);
+        if (semaphore == null) {
+            System.out.println(new String(req.body));
+        }
         semaphore.release();
     }
 
-    private void process(WSReq req, OutputStream out) throws Exception {
-        String method = req.method;
-        int classIndex = method.indexOf('/');
-        String className = method.substring(0, classIndex);
-        int methodIndex = method.indexOf('?', classIndex + 1);
-        String methodName = method.substring(classIndex + 1, methodIndex);
-        HashMap<String, Object> params = params(method.substring(methodIndex + 1));
-        params.put("body", req.body);
-        Pair<Object, HashMap<String, Method>> obj = context.get(className);
-        Object result = process(obj.first, obj.second.get(methodName), params);
-        WSRes res = req.createRes();
-        if (result == null) {
-            res.body = new byte[0];
-        } else if (result instanceof byte[]) {
-            res.body = (byte[]) result;
+    protected void process(WSReq req, OutputStream out) throws Exception {
+        if (server == null) {
+            String method = req.method;
+            int classIndex = method.indexOf('/');
+            String className = method.substring(0, classIndex);
+            int methodIndex = method.indexOf('?', classIndex + 1);
+            String methodName = method.substring(classIndex + 1, methodIndex);
+            HashMap<String, Object> params = params(method.substring(methodIndex + 1));
+            params.put("body", req.body);
+            Pair<Object, HashMap<String, Method>> obj = context.get(className);
+            Object result = process(obj.first, obj.second.get(methodName), params);
+            WSRes res = req.createRes();
+            if (result == null) {
+                res.body = new byte[0];
+            } else if (result instanceof byte[]) {
+                res.body = (byte[]) result;
+            } else {
+                res.body = result.toString().getBytes(StandardCharsets.UTF_8);
+            }
+            WebSocketFrame.writeFrame(out, res.toFrame());
         } else {
-            res.body = result.toString().getBytes(StandardCharsets.UTF_8);
+            server.process(req, out);
         }
-        WebSocketFrame.writeFrame(out, res.toFrame());
     }
 
 
