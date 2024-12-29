@@ -54,6 +54,10 @@ public class WSRes extends WSMsg{
         return Integer.parseInt(asString());
     }
 
+    public double asDouble() {
+        return Double.parseDouble(asString());
+    }
+
     public long asLong() {
         return Long.parseLong(asString());
     }

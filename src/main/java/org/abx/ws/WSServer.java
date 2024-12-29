@@ -16,14 +16,18 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 public class WSServer extends WSEngine {
-    ServerSocket serverSocket;
-    public HashMap<String, WSClient> clients;
+    private ServerSocket serverSocket;
+    private final HashMap<String, WSClient> clients;
 
-    public ArrayList<WSClientListener> listeners;
+    private final ArrayList<WSClientListener> listeners;
 
     public WSServer() {
         clients = new HashMap<>();
         listeners = new ArrayList<>();
+    }
+
+    public WSClient getClient(String id) {
+        return clients.get(id);
     }
 
     public void addClientListener(WSClientListener listener) {

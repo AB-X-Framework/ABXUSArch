@@ -1,6 +1,7 @@
 package org.abx.ws;
 
 import org.abx.ws.annotations.WSMethod;
+import org.abx.ws.annotations.WSService;
 import org.abx.ws.frames.WebSocketFrame;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
@@ -8,7 +9,7 @@ import org.abx.ws.msg.WSRes;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
 
-public class WSClient extends WSEngine {
+public class WSClient extends WSEngine implements WSService {
 
     private String clientId;
     private Socket client;

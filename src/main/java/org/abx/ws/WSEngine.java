@@ -3,6 +3,7 @@ package org.abx.ws;
 import org.abx.util.ExceptionHandler;
 import org.abx.util.Pair;
 import org.abx.ws.annotations.WSMethod;
+import org.abx.ws.annotations.WSService;
 import org.abx.ws.frames.BinaryFrame;
 import org.abx.ws.frames.CloseFrame;
 import org.abx.ws.frames.Frame;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 public class WSEngine {
-    protected final HashMap<String, Pair<Object, HashMap<String, Method>>> context;
+    protected final HashMap<String, Pair<WSService, HashMap<String, Method>>> context;
     protected final HashMap<String, Semaphore> requests;
     protected final HashMap<String, WSRes> responses;
     private final WSServer server;
@@ -42,7 +43,7 @@ public class WSEngine {
         this.server = server;
     }
 
-    public void addController(String name, Object obj) {
+    public void addController(String name, WSService obj) {
         HashMap<String, Method> methods = new HashMap<>();
         for (Method method : obj.getClass().getMethods()) {
             methods.put(method.getName(), method);
@@ -105,7 +106,7 @@ public class WSEngine {
             String methodName = method.substring(classIndex + 1, methodIndex);
             HashMap<String, Object> params = params(method.substring(methodIndex + 1));
             params.put("body", req.body);
-            Pair<Object, HashMap<String, Method>> obj = context.get(className);
+            Pair<WSService, HashMap<String, Method>> obj = context.get(className);
             Object result = process(obj.first, obj.second.get(methodName), params);
             WSRes res = req.createRes();
             if (result == null) {
