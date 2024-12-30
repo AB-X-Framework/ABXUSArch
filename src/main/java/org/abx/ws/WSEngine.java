@@ -109,6 +109,9 @@ public class WSEngine {
             HashMap<String, Object> params = params(method.substring(methodIndex + 1));
             params.put("body", req.getBody());
             Pair<WSService, HashMap<String, Method>> obj = context.get(className);
+            if (obj == null) {
+
+            }
             if (obj.second.get(methodName) == null) {
                 System.err.println("Class " + className + " not found");
             }

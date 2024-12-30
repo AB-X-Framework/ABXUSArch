@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class WSMsg {
     protected final static String ID = "ID";
-    protected final static byte[] OK = "OK".getBytes(StandardCharsets.UTF_8);
+    protected final static byte[] OK = "HTTP/1.1 200".getBytes(StandardCharsets.UTF_8);
     protected final static byte[] Line = "\r\n".getBytes();
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
