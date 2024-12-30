@@ -27,5 +27,7 @@ jobs:
       run: |
         mvn package
         mvn test
+        export GITHUB_ACTOR=luislara
+        export GITHUB_TOKEN=$GITHUB_TOKEN
         mvn deploy
   
