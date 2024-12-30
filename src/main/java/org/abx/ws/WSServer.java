@@ -47,7 +47,6 @@ public class WSServer extends WSEngine {
                                 (new WSReq("_client/getClientId")).asString();
                         clientConnected(clientId);
                         clients.put(clientId, wsClient);
-                        clientDisconnected(clientId);
                     } catch (Exception e) {
                         ExceptionHandler.handleException(e);
                     }
@@ -65,10 +64,11 @@ public class WSServer extends WSEngine {
         }
     }
 
-    private void clientDisconnected(String clientId) {
+    public void clientDisconnected(String clientId) {
         for (WSClientListener listener : listeners) {
             listener.clientDisconnected(clientId);
         }
+        clients.remove(clientId);
     }
 
 

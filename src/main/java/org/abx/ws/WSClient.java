@@ -2,6 +2,7 @@ package org.abx.ws;
 
 import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
+import org.abx.ws.frames.CloseFrame;
 import org.abx.ws.frames.WebSocketFrame;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
@@ -18,18 +19,23 @@ public class WSClient extends WSEngine implements WSService {
         this.clientId = clientId;
         client = new Socket(host, port);
         addController("_client", this);
-        new Thread(()-> handle(client)).start();
+        handle(client);
     }
 
     public WSClient(Socket client, WSServer server)   {
         super(server);
         this.client = client;
-        new Thread(()-> handle(client)).start();
+         handle(client);
     }
 
     @WSMethod(params={})
     public String getClientId() {
         return clientId;
+    }
+
+    public void disconnect() throws Exception {
+        WebSocketFrame.writeFrame(client.getOutputStream(), CloseFrame.get());
+        client.close();
     }
 
     /**
