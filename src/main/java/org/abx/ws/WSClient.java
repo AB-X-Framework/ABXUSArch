@@ -12,8 +12,8 @@ import java.util.concurrent.Semaphore;
 
 public class WSClient extends WSEngine implements WSService {
 
-    private String clientId;
-    private Socket client;
+    protected String clientId;
+    private final Socket client;
 
     public WSClient(String clientId, String host, int port) throws Exception {
         this.clientId = clientId;
@@ -22,13 +22,13 @@ public class WSClient extends WSEngine implements WSService {
         handle(client);
     }
 
-    public WSClient(Socket client, WSServer server)   {
+    public WSClient(Socket client, WSServer server) {
         super(server);
         this.client = client;
-         handle(client);
+        handle(client);
     }
 
-    @WSMethod(params={})
+    @WSMethod(params = {})
     public String getClientId() {
         return clientId;
     }
@@ -40,6 +40,7 @@ public class WSClient extends WSEngine implements WSService {
 
     /**
      * Process request by sending it and waiting until result
+     *
      * @param req The request
      * @return The response after it was found
      * @throws Exception If connection gets closed
@@ -48,7 +49,7 @@ public class WSClient extends WSEngine implements WSService {
         Semaphore reqSem = new Semaphore(1);
         reqSem.acquire();
         requests.put(req.getID(), reqSem);
-        WebSocketFrame.writeFrame(client.getOutputStream(),req.toFrame());
+        WebSocketFrame.writeFrame(client.getOutputStream(), req.toFrame());
         reqSem.acquire();
         return responses.remove(req.getID());
     }

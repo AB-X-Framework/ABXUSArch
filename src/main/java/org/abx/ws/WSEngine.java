@@ -58,6 +58,9 @@ public class WSEngine {
                 while (true) {
                     Frame frame = WebSocketFrame.readFrame(client.getInputStream());
                     if (frame instanceof CloseFrame) {
+                        if (server != null) {
+                            server.clientDisconnected(((WSClient)this).clientId);
+                        }
                         client.close();
                         return;
                     }
@@ -72,7 +75,9 @@ public class WSEngine {
                     }
                 }
             } catch (IOException e) {
-                ExceptionHandler.handleException(e);
+                if (server != null) {
+                    server.clientDisconnected(((WSClient)this).getClientId());
+                }
             }
         }).start();
     }
@@ -87,13 +92,10 @@ public class WSEngine {
 
     }
 
-    private void process(WSRes req) throws Exception {
+    private void process(WSRes req) {
         String id = req.getID();
         responses.put(id, req);
         Semaphore semaphore = requests.remove(id);
-        if (semaphore == null) {
-            System.out.println(new String(req.body));
-        }
         semaphore.release();
     }
 
@@ -149,10 +151,10 @@ public class WSEngine {
     /**
      * Cast one parameter
      *
-     * @param arg
-     * @param paramType
-     * @return
-     * @throws Exception
+     * @param arg the element
+     * @param paramType the param
+     * @return the cast param
+     * @throws Exception If param cannot be cast
      */
     private Object castParameter(Object arg, Class paramType, String methodName, String paramName)
             throws Exception {
@@ -178,8 +180,8 @@ public class WSEngine {
     /**
      * Return wether the class is primitive
      *
-     * @param c
-     * @return
+     * @param c the class
+     * @return if c is a primitive
      */
     private static boolean isPrimitive(Class c) {
         if (Integer.class == c || Long.class == c || Double.class == c ||
@@ -193,8 +195,8 @@ public class WSEngine {
     /**
      * Return primitives
      *
-     * @param c
-     * @return
+     * @param c the primitive
+     * @return the cast primitive
      */
     private static Class castPrimitiveIntance(Class c) {
         if (int.class == c) {

@@ -1,19 +1,13 @@
 package org.abx.ws;
 
 import org.abx.util.ExceptionHandler;
-import org.abx.ws.frames.BinaryFrame;
-import org.abx.ws.frames.CloseFrame;
-import org.abx.ws.frames.Frame;
-import org.abx.ws.frames.WebSocketFrame;
 import org.abx.ws.msg.WSReq;
-import org.abx.ws.msg.WSRes;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Semaphore;
 
 public class WSServer extends WSEngine {
     private ServerSocket serverSocket;
@@ -45,6 +39,7 @@ public class WSServer extends WSEngine {
                         WSClient wsClient = new WSClient(client, this);
                         String clientId = wsClient.process
                                 (new WSReq("_client/getClientId")).asString();
+                        wsClient.clientId = clientId;
                         clientConnected(clientId);
                         clients.put(clientId, wsClient);
                     } catch (Exception e) {
