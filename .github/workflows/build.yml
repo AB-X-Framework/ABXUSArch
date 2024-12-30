@@ -28,6 +28,6 @@ jobs:
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
       run: |
-        mvn clean source:jar deploy -DuniqueVersion=false -Dmaven.source.useDefaultManifestFile=true -Dmaven.source.includePom=true -Dmaven.install.skip=true -DdeplyAtEnd=true -DaltDeploymentRepository='github::default::https://maven.pkg.github.com/luislara/wsarch'
+        mvn clean source:jar deploy -DuniqueVersion=false -Dmaven.source.useDefaultManifestFile=true -Dmaven.source.includePom=true -Dmaven.install.skip=true -DdeplyAtEnd=true -DaltDeploymentRepository='github::default::https://maven.pkg.github.com/ab-x-framework/wsarch'
 
   
