@@ -21,9 +21,9 @@ jobs:
         java-version:  '21.0.5'
 
     # Step 3: Verify GraalVM installation
-    - name: Verify GraalVM installation
+    - name: Compile and deploy WSArch
       run: |
-        java -version
         mvn package
         mvn test
+        mvn deploy
 
