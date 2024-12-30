@@ -41,7 +41,7 @@
                 <version>2.8.2</version>
                 <configuration>
                     <repositoryId>github</repositoryId>
-                    <url>https://maven.pkg.github.com/OWNER/REPOSITORY</url>
+                    <url>https://maven.pkg.github.com/AB-X-Framework/WSArch</url>
                     <authentication>
                         <username>${env.GITHUB_ACTOR}</username>
                         <password>${env.GITHUB_TOKEN}</password>

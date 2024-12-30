@@ -25,11 +25,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        mvn package
-        mvn test
+        echo INITIAL ACTOR $GITHUB_ACTOR
         export GITHUB_ACTOR=luislara
         export GITHUB_TOKEN=$GITHUB_TOKEN
         echo ACTOR $GITHUB_ACTOR
         echo $GITHUB_TOKEN
+        curl -u "GITHUB_ACTOR:${GITHUB_TOKEN}" https://maven.pkg.github.com/OWNER/REPOSITORY
         mvn deploy
   
