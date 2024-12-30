@@ -24,19 +24,9 @@ jobs:
       uses: s4u/maven-settings-action@v2.5.0
       with:
         servers: '[{"id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
+
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
-
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       run: |
-        echo INITIAL ACTOR $GITHUB_ACTOR
-        export GITHUB_TOKEN=$GITHUB_TOKEN
-        echo ACTOR $GITHUB_ACTOR
-        echo $GITHUB_TOKEN
-        curl -u "GITHUB_ACTOR:${GITHUB_TOKEN}" https://maven.pkg.github.com/AB-X-Framework/WSArch/org/abx/ws/WSArch/1.0-SNAPSHOT/maven-metadata.xml
-        echo curl -u "$GITHUB_ACTOR:$GITHUB_TOKEN" https://maven.pkg.github.com/AB-X-Framework/WSArch
-        curl -u "$GITHUB_ACTOR:$GITHUB_TOKEN" https://maven.pkg.github.com/AB-X-Framework/WSArch
-        mvn deploy -X
+        mvn deploy 
   
