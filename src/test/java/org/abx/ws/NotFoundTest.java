@@ -1,5 +1,6 @@
 package org.abx.ws;
 
+import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
@@ -7,6 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class NotFoundTest implements WSService {
+
+    @WSMethod(params = {})
+    public void throwError ()throws Exception{
+        throw new Exception("Expected error");
+    }
 
     @Test
     public void doTest() throws Exception {
@@ -22,13 +28,25 @@ public class NotFoundTest implements WSService {
             System.out.println("Client started");
             boolean error = false;
             try {
-                client.process(new WSReq("math/add").set("a", 2).set("b", 3));
+                client.process(new WSReq("math/throwError").set("a", 2).set("b", 3));
             } catch (Exception e) {
                 error = true;
-                Assertions.assertEquals("Method not found add", e.getMessage());
+                String text = e.getMessage();
+                Assertions.assertTrue( e.getMessage().contains("java.lang.Exception: Expected error"),e.getMessage());
             }
             Assertions.assertTrue(error);
             System.out.println("Method processed");
+
+            error = false;
+            try {
+                client.process(new WSReq("mathNo/add").set("a", 2).set("b", 3));
+            } catch (Exception e) {
+                error = true;
+                Assertions.assertEquals("Class not found mathNo", e.getMessage());
+            }
+            Assertions.assertTrue(error);
+            System.out.println("Method processed");
+
 
             error = false;
             try {

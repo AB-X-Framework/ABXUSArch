@@ -18,6 +18,7 @@ public class WSMsg {
     protected final static byte[] ResponseMsgBytes = ResponseMsg.getBytes();
     protected final static byte[] OK = (ResponseMsg+" 200 OK").getBytes();
     protected final static byte[] NotFound = (ResponseMsg+" 4O4 Not Found").getBytes();
+    protected final static byte[] Error = (ResponseMsg+" 500 Internal Server Error").getBytes();
     protected final static byte[] Line = "\r\n".getBytes();
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 

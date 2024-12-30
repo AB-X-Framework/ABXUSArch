@@ -14,8 +14,10 @@ import org.abx.ws.msg.WSRes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URLDecoder;
@@ -109,25 +111,36 @@ public class WSEngine {
             HashMap<String, Object> params = params(method.substring(methodIndex + 1));
             params.put("body", req.getBody());
             Pair<WSService, HashMap<String, Method>> obj = context.get(className);
-            WSRes res;
+            WSRes res = req.createRes();
             if (obj == null) {
-                res = req.createRes();
                 res.setNotFound();
                 res.setBody(("Class not found " + className).getBytes());
             } else {
                 if (obj.second.get(methodName) == null) {
-                    res = req.createRes();
                     res.setNotFound();
                     res.setBody(("Method not found " + methodName).getBytes());
                 } else {
-                    Object result = process(obj.first, obj.second.get(methodName), params);
-                    res = req.createRes();
-                    if (result == null) {
-                        res.setBody(new byte[0]);
-                    } else if (result instanceof byte[]) {
-                        res.setBody((byte[]) result);
-                    } else {
-                        res.setBody(result.toString().getBytes(StandardCharsets.UTF_8));
+                    try {
+                        Object result = process(obj.first, obj.second.get(methodName), params);
+                        if (result == null) {
+                            res.setBody(new byte[0]);
+                        } else if (result instanceof byte[]) {
+                            res.setBody((byte[]) result);
+                        } else {
+                            res.setBody(result.toString().getBytes(StandardCharsets.UTF_8));
+                        }
+                    } catch (Throwable e) {
+                        if (e.getCause() != null) {
+                            e = e.getCause();
+                        }
+                        String message = e.getMessage();
+                        if (message == null) {
+                            message = e.getClass().getName();
+                        }
+                        res.setError();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        e.printStackTrace(new PrintStream(baos));
+                        res.setBody(baos.toByteArray());
                     }
                 }
             }

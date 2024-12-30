@@ -29,13 +29,21 @@ public class WSRes extends WSMsg {
     public void setNotFound(){
         status = NotFound;
     }
-    public WSRes setBody(byte[] bodySt) {
+
+    public void setError(){
+        status = Error;
+    }
+
+    public void setBody(byte[] bodySt) {
         body = bodySt;
-        return this;
     }
 
     public boolean isNotFound() {
         return Arrays.equals(status, NotFound);
+    }
+
+    public boolean isError() {
+        return Arrays.equals(status, Error);
     }
 
     public String getStatus() {
