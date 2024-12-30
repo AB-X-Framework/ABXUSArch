@@ -19,7 +19,7 @@ public class WSMsg {
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
     protected HashMap<String, String> headers;
-    public byte[] body;
+    protected byte[] body;
 
     public WSMsg() {
         headers = new HashMap<>();
@@ -36,6 +36,10 @@ public class WSMsg {
             String value = header.substring(index + 2);
             headers.put(key, value);
         }
+    }
+
+    public byte[] getBody() {
+        return body;
     }
 
     public void putHeader(String key, String value) {

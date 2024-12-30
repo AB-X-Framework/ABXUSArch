@@ -12,14 +12,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-public class WSRes extends WSMsg{
+public class WSRes extends WSMsg {
 
     public WSRes(String id) {
-        putHeader(ID,id);
+        putHeader(ID, id);
     }
-    protected WSRes(){
+
+    protected WSRes() {
 
     }
+
+    public WSRes setBody(byte[] bodySt) {
+        body = bodySt;
+        return this;
+    }
+
+
 
     public BinaryFrame toFrame() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -37,9 +45,6 @@ public class WSRes extends WSMsg{
         Pair<String, InputStream> processed = res.processHeaders(data);
         res.body = StreamUtils.readByteArrayStream(processed.second);
         return res;
-    }
-    public byte[] asByteArray() {
-        return body;
     }
 
     public String asString() {

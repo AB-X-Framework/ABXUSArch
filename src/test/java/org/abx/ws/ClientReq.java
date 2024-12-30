@@ -9,4 +9,12 @@ public class ClientReq implements WSService {
     public double multiply(double a, double b) {
         return a * b;
     }
+
+    @WSMethod(params = {"body"})
+    public byte[] plusOne(byte[] body){
+        for (int i =0; i<body.length; ++i){
+            body[i] += 1;
+        }
+        return body;
+    }
 }

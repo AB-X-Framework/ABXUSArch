@@ -18,6 +18,8 @@ public class FrameTest implements WSService, WSClientListener {
         return a + b;
     }
 
+
+
     @Test
     public void doTest() throws Exception {
         String clientName = "clientx";
@@ -37,6 +39,8 @@ public class FrameTest implements WSService, WSClientListener {
         res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
         Assertions.assertEquals(1.5, res.asDouble(), 0.001);
         Assertions.assertEquals(clientName, incommingClient);
+        byte[] data =incommingWSClient.process(new WSReq("multiply/plusOne").setBody(bytes())).getBody();
+        Assertions.assertArrayEquals(new byte[] {1,2,3}, data);
         client.disconnect();
         System.out.println("Client disconnected");
         Assertions.assertEquals(clientName, disconnectedClient);
@@ -50,4 +54,7 @@ public class FrameTest implements WSService, WSClientListener {
         disconnectedClient = clientId;
     }
 
+    private byte[] bytes() {
+        return new byte[]{0,1,2};
+    }
 }

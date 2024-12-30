@@ -59,7 +59,7 @@ public class WSEngine {
                     Frame frame = WebSocketFrame.readFrame(client.getInputStream());
                     if (frame instanceof CloseFrame) {
                         if (server != null) {
-                            server.clientDisconnected(((WSClient)this).clientId);
+                            server.clientDisconnected(((WSClient) this).clientId);
                         }
                         client.close();
                         return;
@@ -76,7 +76,7 @@ public class WSEngine {
                 }
             } catch (IOException e) {
                 if (server != null) {
-                    server.clientDisconnected(((WSClient)this).getClientId());
+                    server.clientDisconnected(((WSClient) this).getClientId());
                 }
             }
         }).start();
@@ -107,16 +107,19 @@ public class WSEngine {
             int methodIndex = method.indexOf('?', classIndex + 1);
             String methodName = method.substring(classIndex + 1, methodIndex);
             HashMap<String, Object> params = params(method.substring(methodIndex + 1));
-            params.put("body", req.body);
+            params.put("body", req.getBody());
             Pair<WSService, HashMap<String, Method>> obj = context.get(className);
+            if (obj.second.get(methodName) == null) {
+                System.err.println("Class " + className + " not found");
+            }
             Object result = process(obj.first, obj.second.get(methodName), params);
             WSRes res = req.createRes();
             if (result == null) {
-                res.body = new byte[0];
+                res.setBody(new byte[0]);
             } else if (result instanceof byte[]) {
-                res.body = (byte[]) result;
+                res.setBody((byte[]) result);
             } else {
-                res.body = result.toString().getBytes(StandardCharsets.UTF_8);
+                res.setBody(result.toString().getBytes(StandardCharsets.UTF_8));
             }
             WebSocketFrame.writeFrame(out, res.toFrame());
         } else {
@@ -151,7 +154,7 @@ public class WSEngine {
     /**
      * Cast one parameter
      *
-     * @param arg the element
+     * @param arg       the element
      * @param paramType the param
      * @return the cast param
      * @throws Exception If param cannot be cast

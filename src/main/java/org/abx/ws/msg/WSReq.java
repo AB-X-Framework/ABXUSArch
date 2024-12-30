@@ -38,8 +38,14 @@ public class WSReq extends WSMsg{
         return this;
     }
 
-    public void setBody(ByteArrayInputStream bodySt) throws IOException {
+    public WSReq setBody(ByteArrayInputStream bodySt) throws IOException {
         body = StreamUtils.readByteArrayStream(bodySt);
+        return this;
+    }
+
+    public WSReq setBody(byte[] bodySt) {
+        body = bodySt;
+        return this;
     }
 
     public BinaryFrame toFrame() {
