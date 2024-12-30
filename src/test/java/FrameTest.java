@@ -40,7 +40,6 @@ public class FrameTest implements WSService, WSClientListener {
         client.disconnect();
         System.out.println("Client disconnected");
         Assert.assertEquals(clientName, disconnectedClient);
-
     }
 
     public void clientConnected(String clientId) {
