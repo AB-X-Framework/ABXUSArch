@@ -40,18 +40,18 @@ public class WSServer extends WSEngine {
             try {
                 while (true) {
                     Socket client = serverSocket.accept();
-                    new Thread(() -> {
-                        try {
-                            WSClient wsClient = new WSClient(client, this);
-                            String clientId = wsClient.process
-                                    (new WSReq("_client/getClientId")).asString();
-                            clientConnected(clientId);
-                            clients.put(clientId, wsClient);
-                            clientDisconnected(clientId);
-                        } catch (Exception e) {
-                            ExceptionHandler.handleException(e);
-                        }
-                    }).start();
+
+                    try {
+                        WSClient wsClient = new WSClient(client, this);
+                        String clientId = wsClient.process
+                                (new WSReq("_client/getClientId")).asString();
+                        clientConnected(clientId);
+                        clients.put(clientId, wsClient);
+                        clientDisconnected(clientId);
+                    } catch (Exception e) {
+                        ExceptionHandler.handleException(e);
+                    }
+
                 }
             } catch (IOException e) {
                 ExceptionHandler.handleException(e);
