@@ -25,7 +25,7 @@ jobs:
     - name: Settings
       uses: s4u/maven-settings-action@v2.5.0
       with:
-        servers: '[{"id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
+        servers: '[{"url":"https://maven.pkg.github.com/AB-X-Framework/WSArch","id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
 
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
