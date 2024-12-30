@@ -20,10 +20,10 @@ jobs:
       with:
         java-version:  '21.0.5'
 
-    - name: Settings
+    - name: Set up Maven settings
       uses: s4u/maven-settings-action@v2.5.0
       with:
-        servers: '[{"id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
+        servers: '[{"id": "github","username": "${{ github.actor }}","password": "${{ secrets.GITHUB_TOKEN }}"}]'
 
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
