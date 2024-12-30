@@ -14,14 +14,20 @@ import java.util.HashMap;
 
 public class WSRes extends WSMsg {
 
+    private byte[] status;
+
     public WSRes(String id) {
         putHeader(ID, id);
+        status = OK;
     }
 
     protected WSRes() {
-
+        status = OK;
     }
 
+    public void setNotFound(){
+        status = NotFound;
+    }
     public WSRes setBody(byte[] bodySt) {
         body = bodySt;
         return this;
@@ -31,7 +37,7 @@ public class WSRes extends WSMsg {
 
     public BinaryFrame toFrame() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.write(OK);
+        baos.write(status);
         baos.write(Line);
         processHeaders(baos);
         if (body != null) {

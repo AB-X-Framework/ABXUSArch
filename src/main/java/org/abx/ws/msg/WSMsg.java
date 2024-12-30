@@ -14,7 +14,10 @@ import java.util.Map;
 
 public class WSMsg {
     protected final static String ID = "ID";
-    protected final static byte[] OK = "HTTP/1.1 200".getBytes(StandardCharsets.UTF_8);
+    protected final static String ResponseMsg = "HTTP/1.1";
+    protected final static byte[] ResponseMsgBytes = ResponseMsg.getBytes();
+    protected final static byte[] OK = (ResponseMsg+" 200 OK").getBytes();
+    protected final static byte[] NotFound = (ResponseMsg+" 4O4 Not Found").getBytes();
     protected final static byte[] Line = "\r\n".getBytes();
     protected final static byte[] DoubleLine = "\r\n\r\n".getBytes();
 
@@ -52,7 +55,7 @@ public class WSMsg {
 
     public static WSMsg fromFrame(BinaryFrame frame) throws IOException {
         byte[] data = frame.getByteArray();
-        if (StreamUtils.startsWith(data, OK)) {
+        if (StreamUtils.startsWith(data, ResponseMsgBytes)) {
             return WSRes.from(data);
         } else {
             return WSReq.from(data);
