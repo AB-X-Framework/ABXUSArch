@@ -20,10 +20,16 @@ jobs:
       with:
         java-version:  '21.0.5'
 
+    - name: Settings
+      uses: s4u/maven-settings-action@v2.5.0
+      with:
+        servers: '[{"id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       run: |
         echo INITIAL ACTOR $GITHUB_ACTOR
         export GITHUB_TOKEN=$GITHUB_TOKEN
