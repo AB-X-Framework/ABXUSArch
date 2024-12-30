@@ -20,13 +20,14 @@ jobs:
       with:
         java-version:  '21.0.5'
 
-    - name: Set up Maven settings
+    - name: Settings
       uses: s4u/maven-settings-action@v2.5.0
       with:
-        servers: '[{"id": "github","username": "${{ github.actor }}","password": "${{ secrets.GITHUB_TOKEN }}"}]'
+        servers: '[{"id": "github","configuration": {"httpHeaders": {"property": {"name": "Authorization","value": "Bearer ${{ secrets.GITHUB_TOKEN }}"}}}}]'
 
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
       run: |
-        mvn deploy 
+        mvn clean source:jar deploy -DuniqueVersion=false -Dmaven.source.useDefaultManifestFile=true -Dmaven.source.includePom=true -Dmaven.install.skip=true -DdeplyAtEnd=true -DaltDeploymentRepository='github::default::https://maven.pkg.github.com/AB-X-Framework/WSArch'
+
   
