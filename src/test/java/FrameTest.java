@@ -5,8 +5,9 @@ import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
 import org.abx.ws.msg.WSReq;
 import org.abx.ws.msg.WSRes;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FrameTest implements WSService, WSClientListener {
 
@@ -32,14 +33,14 @@ public class FrameTest implements WSService, WSClientListener {
         System.out.println("Client started");
         WSRes res = client.process(new WSReq("math/add").set("a", 2).set("b", 3));
         System.out.println("Method processed");
-        Assert.assertEquals(5, res.asInt());
+        Assertions.assertEquals(5, res.asInt());
         WSClient incommingWSClient = server.getClient(clientName);
         res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
-        Assert.assertEquals(1.5, res.asDouble(), 0.001);
-        Assert.assertEquals(clientName, incommingClient);
+        Assertions.assertEquals(1.5, res.asDouble(), 0.001);
+        Assertions.assertEquals(clientName, incommingClient);
         client.disconnect();
         System.out.println("Client disconnected");
-        Assert.assertEquals(clientName, disconnectedClient);
+        Assertions.assertEquals(clientName, disconnectedClient);
     }
 
     public void clientConnected(String clientId) {
