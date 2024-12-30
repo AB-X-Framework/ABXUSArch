@@ -23,7 +23,7 @@ jobs:
     - name: Set up Maven settings
       uses: s4u/maven-settings-action@v2.5.0
       with:
-        servers: '[{"id": "github","username": "${{ github.actor }}","password": "${{ secrets.GITHUB_TOKEN }}"}]'
+        servers: '[{"id": "github","username": "${{ github.actor }}","password": "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"}]'
 
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
