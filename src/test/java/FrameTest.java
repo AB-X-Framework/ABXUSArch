@@ -35,7 +35,7 @@ public class FrameTest implements WSService, WSClientListener {
         Assert.assertEquals(5, res.asInt());
         WSClient incommingWSClient = server.getClient(clientName);
         res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
-        Assert.assertEquals(1.5, res.asDouble(), 0.1);
+        Assert.assertEquals(1.5, res.asDouble(), 0.001);
         Assert.assertEquals(clientName, incommingClient);
         client.disconnect();
         System.out.println("Client disconnected");
