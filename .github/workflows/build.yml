@@ -26,10 +26,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo INITIAL ACTOR $GITHUB_ACTOR
-        export GITHUB_ACTOR=luislara
         export GITHUB_TOKEN=$GITHUB_TOKEN
         echo ACTOR $GITHUB_ACTOR
         echo $GITHUB_TOKEN
-        curl -u "GITHUB_ACTOR:${GITHUB_TOKEN}" https://maven.pkg.github.com/OWNER/REPOSITORY
+        curl -u "GITHUB_ACTOR:${GITHUB_TOKEN}" https://maven.pkg.github.com/AB-X-Framework/WSArch/org/abx/ws/WSArch/1.0-SNAPSHOT/maven-metadata.xml
         mvn deploy
   
