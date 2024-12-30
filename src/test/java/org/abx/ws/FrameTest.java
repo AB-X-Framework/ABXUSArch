@@ -1,6 +1,5 @@
-import org.abx.ws.WSClient;
-import org.abx.ws.WSClientListener;
-import org.abx.ws.WSServer;
+package org.abx.ws;
+
 import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
 import org.abx.ws.msg.WSReq;

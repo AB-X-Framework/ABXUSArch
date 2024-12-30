@@ -1,3 +1,5 @@
+package org.abx.ws;
+
 import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
 
