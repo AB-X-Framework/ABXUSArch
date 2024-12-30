@@ -22,8 +22,10 @@ jobs:
 
     # Step 3: Verify GraalVM installation
     - name: Compile and deploy WSArch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mvn package
         mvn test
         mvn deploy
-
+  
