@@ -51,30 +51,30 @@ public class WSEngine {
         context.put(name, new Pair<>(obj, methods));
     }
 
-    public void handle(Socket client) {
-        new Thread(() -> {
-            try {
-                OutputStream out = client.getOutputStream();
-                while (true) {
-                    Frame frame = WebSocketFrame.readFrame(client.getInputStream());
-                    if (frame instanceof CloseFrame) {
-                        client.close();
-                        return;
-                    }
-                    if (frame instanceof BinaryFrame) {
-                        new Thread(() -> {
-                            try {
-                                process((BinaryFrame) frame, out);
-                            } catch (Exception e) {
-                                ExceptionHandler.handleException(e);
-                            }
-                        }).start();
-                    }
+    protected void handle(Socket client) {
+
+        try {
+            OutputStream out = client.getOutputStream();
+            while (true) {
+                Frame frame = WebSocketFrame.readFrame(client.getInputStream());
+                if (frame instanceof CloseFrame) {
+                    client.close();
+                    return;
                 }
-            } catch (IOException e) {
-                ExceptionHandler.handleException(e);
+                if (frame instanceof BinaryFrame) {
+                    new Thread(() -> {
+                        try {
+                            process((BinaryFrame) frame, out);
+                        } catch (Exception e) {
+                            ExceptionHandler.handleException(e);
+                        }
+                    }).start();
+                }
             }
-        }).start();
+        } catch (IOException e) {
+            ExceptionHandler.handleException(e);
+        }
+
     }
 
     private void process(BinaryFrame frame, OutputStream out) throws Exception {

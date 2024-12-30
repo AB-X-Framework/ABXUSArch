@@ -18,13 +18,13 @@ public class WSClient extends WSEngine implements WSService {
         this.clientId = clientId;
         client = new Socket(host, port);
         addController("_client", this);
-        handle(client);
+        new Thread(()-> handle(client)).start();
     }
 
     public WSClient(Socket client, WSServer server)   {
         super(server);
         this.client = client;
-        handle(client);
+        new Thread(()-> handle(client)).start();
     }
 
     @WSMethod(params={})
