@@ -19,7 +19,6 @@ public class FrameTest implements WSService, WSClientListener {
     }
 
 
-
     @Test
     public void doTest() throws Exception {
         String clientName = "clientx";
@@ -28,22 +27,26 @@ public class FrameTest implements WSService, WSClientListener {
         server.addClientListener(this);
         server.addController("math", this);
         server.start(port);
-        System.out.println("Server started");
-        WSClient client = new WSClient(clientName, "localhost", port);
-        client.addController("multiply", new ClientReq());
-        System.out.println("Client started");
-        WSRes res = client.process(new WSReq("math/add").set("a", 2).set("b", 3));
-        System.out.println("Method processed");
-        Assertions.assertEquals(5, res.asInt());
-        WSClient incommingWSClient = server.getClient(clientName);
-        res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
-        Assertions.assertEquals(1.5, res.asDouble(), 0.001);
-        Assertions.assertEquals(clientName, incommingClient);
-        byte[] data =incommingWSClient.process(new WSReq("multiply/plusOne").setBody(bytes())).getBody();
-        Assertions.assertArrayEquals(new byte[] {1,2,3}, data);
-        client.disconnect();
-        System.out.println("Client disconnected");
-        Assertions.assertEquals(clientName, disconnectedClient);
+        try {
+            System.out.println("Server started");
+            WSClient client = new WSClient(clientName, "localhost", port);
+            client.addController("multiply", new ClientReq());
+            System.out.println("Client started");
+            WSRes res = client.process(new WSReq("math/add").set("a", 2).set("b", 3));
+            System.out.println("Method processed");
+            Assertions.assertEquals(5, res.asInt());
+            WSClient incommingWSClient = server.getClient(clientName);
+            res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
+            Assertions.assertEquals(1.5, res.asDouble(), 0.001);
+            Assertions.assertEquals(clientName, incommingClient);
+            byte[] data = incommingWSClient.process(new WSReq("multiply/plusOne").setBody(bytes())).getBody();
+            Assertions.assertArrayEquals(new byte[]{1, 2, 3}, data);
+            client.disconnect();
+            System.out.println("Client disconnected");
+            Assertions.assertEquals(clientName, disconnectedClient);
+        } finally {
+            server.stop();
+        }
     }
 
     public void clientConnected(String clientId) {
@@ -55,6 +58,6 @@ public class FrameTest implements WSService, WSClientListener {
     }
 
     private byte[] bytes() {
-        return new byte[]{0,1,2};
+        return new byte[]{0, 1, 2};
     }
 }

@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class WSRes extends WSMsg {
@@ -33,7 +34,13 @@ public class WSRes extends WSMsg {
         return this;
     }
 
+    public boolean isNotFound() {
+        return Arrays.equals(status, NotFound);
+    }
 
+    public String getStatus() {
+        return new String(status);
+    }
 
     public BinaryFrame toFrame() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -49,6 +56,7 @@ public class WSRes extends WSMsg {
     public static WSRes from(byte[] data) throws IOException {
         WSRes res = new WSRes();
         Pair<String, InputStream> processed = res.processHeaders(data);
+        res.status = processed.first.getBytes();
         res.body = StreamUtils.readByteArrayStream(processed.second);
         return res;
     }

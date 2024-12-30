@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WSServer extends WSEngine {
+    private boolean stoped;
     private ServerSocket serverSocket;
     private final HashMap<String, WSClient> clients;
 
@@ -18,6 +19,21 @@ public class WSServer extends WSEngine {
     public WSServer() {
         clients = new HashMap<>();
         listeners = new ArrayList<>();
+    }
+
+    public void stop(){
+        stoped = true;
+        for (WSClientListener l : listeners){
+            for (String client : clients.keySet()){
+                l.clientDisconnected(client);
+            }
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            ExceptionHandler.handleException(e);
+        }
+
     }
 
     public WSClient getClient(String id) {
@@ -34,7 +50,6 @@ public class WSServer extends WSEngine {
             try {
                 while (true) {
                     Socket client = serverSocket.accept();
-
                     try {
                         WSClient wsClient = new WSClient(client, this);
                         String clientId = wsClient.process
@@ -45,10 +60,11 @@ public class WSServer extends WSEngine {
                     } catch (Exception e) {
                         ExceptionHandler.handleException(e);
                     }
-
                 }
             } catch (IOException e) {
-                ExceptionHandler.handleException(e);
+                if (!stoped) {
+                    ExceptionHandler.handleException(e);
+                }
             }
         }).start();
     }

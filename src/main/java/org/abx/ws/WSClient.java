@@ -51,6 +51,11 @@ public class WSClient extends WSEngine implements WSService {
         requests.put(req.getID(), reqSem);
         WebSocketFrame.writeFrame(client.getOutputStream(), req.toFrame());
         reqSem.acquire();
-        return responses.remove(req.getID());
+        WSRes res= responses.remove(req.getID());
+        String status = res.getStatus();
+        if (res.isNotFound()){
+            throw new Exception(res.asString());
+        }
+        return res;
     }
 }

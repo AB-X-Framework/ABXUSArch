@@ -109,20 +109,27 @@ public class WSEngine {
             HashMap<String, Object> params = params(method.substring(methodIndex + 1));
             params.put("body", req.getBody());
             Pair<WSService, HashMap<String, Method>> obj = context.get(className);
+            WSRes res;
             if (obj == null) {
-
-            }
-            if (obj.second.get(methodName) == null) {
-                System.err.println("Class " + className + " not found");
-            }
-            Object result = process(obj.first, obj.second.get(methodName), params);
-            WSRes res = req.createRes();
-            if (result == null) {
-                res.setBody(new byte[0]);
-            } else if (result instanceof byte[]) {
-                res.setBody((byte[]) result);
+                res = req.createRes();
+                res.setNotFound();
+                res.setBody(("Class not found " + className).getBytes());
             } else {
-                res.setBody(result.toString().getBytes(StandardCharsets.UTF_8));
+                if (obj.second.get(methodName) == null) {
+                    res = req.createRes();
+                    res.setNotFound();
+                    res.setBody(("Method not found " + methodName).getBytes());
+                } else {
+                    Object result = process(obj.first, obj.second.get(methodName), params);
+                    res = req.createRes();
+                    if (result == null) {
+                        res.setBody(new byte[0]);
+                    } else if (result instanceof byte[]) {
+                        res.setBody((byte[]) result);
+                    } else {
+                        res.setBody(result.toString().getBytes(StandardCharsets.UTF_8));
+                    }
+                }
             }
             WebSocketFrame.writeFrame(out, res.toFrame());
         } else {
