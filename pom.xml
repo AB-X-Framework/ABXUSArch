@@ -39,9 +39,9 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>github</id>
+            <id>github-WSArch</id>
             <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/AB-X-Framework/ABX</url>
+            <url>https://maven.pkg.github.com/AB-X-Framework/WSArch</url>
         </repository>
     </distributionManagement>
 
