@@ -1,4 +1,4 @@
-name: GraalVM Workflow
+name: WSArch Workflow
 
 on:
   push:
