@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
         "org.abx.spring",
+        "org.abx.sec",
         "org.abx.jwt",
         "org.abx.services",
         "org.abx.heartbeat"})

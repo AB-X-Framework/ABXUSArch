@@ -1,9 +1,7 @@
-package org.abx.spring;
+package org.abx.sec;
 
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.abx.jwt.JwtRequestFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

@@ -13,9 +13,9 @@ public class HeartbeatController {
     @Autowired
 
     @PreAuthorize("permitAll()")
-    @RequestMapping("/demo")
-    public String demo() {
-        return "demo";
+    @RequestMapping("/alive")
+    public boolean alive() {
+        return true;
     }
 
 
