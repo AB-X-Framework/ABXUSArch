@@ -64,7 +64,7 @@ class JWTTest {
 
     @Test
     public void reqTest() throws Exception {
-        ServiceRequest req = servicesClient.get("demo", "/demo");
+        ServiceRequest req = servicesClient.get("demo", "/heartbeat/demo");
         ServiceResponse res = servicesClient.process(req);
         Assertions.assertEquals("demo", res.asString());
         String username = "dummy";
@@ -72,13 +72,13 @@ class JWTTest {
         String token = JWTUtils.generateToken(username, privateKey, 60,
                 role);
 
-        req = servicesClient.get("demo", "/user");
+        req = servicesClient.get("demo", "/heartbeat/user");
         req.jwt(token);
         res = servicesClient.process(req);
         Assertions.assertEquals(username, res.asString());
 
 
-        req = servicesClient.get("demo", "/admin");
+        req = servicesClient.get("demo", "/heartbeat/admin");
         req.jwt(token);
         res = servicesClient.process(req);
         Assertions.assertTrue(res.asBoolean());
