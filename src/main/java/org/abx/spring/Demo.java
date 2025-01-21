@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "org.abx.spring",
         "org.abx.jwt",
         "org.abx.services",
-        "org.abx.controller"})
+        "org.abx.heartbeat"})
 public class Demo {
 
     public static void main(String[] args) {
