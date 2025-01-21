@@ -12,6 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JWTUtils {
@@ -51,19 +52,12 @@ public class JWTUtils {
                 .getPayload();
     }
 
-    public static String generateToken(String username,String privateKey) throws Exception {
-        return generateToken(username,privateKey, 60);
-    }
-
-    public static String generateToken(String username,String privateKey,int validSeconds) throws Exception {
-        return generateToken(username,privateKey, 60,"");
-    }
 
     public static String generateToken(
             String username,
             String privateKey,
             int validSeconds,
-            String role) throws Exception {
+            List<String> role) throws Exception {
         long expirationTime = validSeconds *1000; // 1 hour in milliseconds
         byte[] decodedKey = Base64.getDecoder().decode(removePemDelimiters(privateKey));
 

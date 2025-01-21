@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest(classes = Demo.class)
 class JWTTest {
 
@@ -37,7 +39,7 @@ class JWTTest {
     @Test
     public void doBasicTest() throws Exception {
         String username = "dummy";
-        String role = "admin";
+        List<String> role = List.of("admin");
         String token = JWTUtils.generateToken(username, privateKey, 60,
                 role);
         Claims claims = jwtUtils.validateToken(token);
@@ -59,19 +61,34 @@ class JWTTest {
     }
 
     @Test
-    public void reqTest()throws Exception{
-        ServiceRequest req = servicesClient.get("demo","/demo");
+    public void reqTest() throws Exception {
+        ServiceRequest req = servicesClient.get("demo", "/demo");
         ServiceResponse res = servicesClient.process(req);
-        Assertions.assertEquals("demo",res.asString());
+        Assertions.assertEquals("demo", res.asString());
         String username = "dummy";
-        String admin = "admin";
+        List<String> role = List.of("admin");
         String token = JWTUtils.generateToken(username, privateKey, 60,
-                admin);
+                role);
 
-         req = servicesClient.get("demo","/user");
-         req.addHeader("Authorization", "Bearer " + token);
-         res = servicesClient.process(req);
-        Assertions.assertEquals(username,res.asString());
+        req = servicesClient.get("demo", "/user");
+        req.jwt(token);
+        res = servicesClient.process(req);
+        Assertions.assertEquals(username, res.asString());
+
+
+        req = servicesClient.get("demo", "/admin");
+        req.jwt(token);
+        res = servicesClient.process(req);
+        Assertions.assertTrue(res.asBoolean());
+
+        username = "mini";
+        role = List.of("user");
+        token = JWTUtils.generateToken(username, privateKey, 60,
+                role);
+        req = servicesClient.get("demo", "/admin");
+        req.jwt(token);
+        res = servicesClient.process(req);
+        Assertions.assertFalse(res.asBoolean());
     }
 
 }

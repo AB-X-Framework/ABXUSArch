@@ -20,6 +20,9 @@ public class ServiceResponse {
     public String asString() throws UnsupportedEncodingException {
         return new String(response.body(), StandardCharsets.UTF_8);
     }
+    public boolean asBoolean() throws UnsupportedEncodingException {
+        return Boolean.parseBoolean( new String(response.body(), StandardCharsets.UTF_8));
+    }
 
 
     public Map<String, List<String>> headers() {

@@ -20,6 +20,10 @@ public class ServiceRequest {
         this.headers = new HashMap<>();
     }
 
+    public ServiceRequest jwt(String token) {
+        return addHeader("Authorization", "Bearer " + token);
+    }
+
     public ServiceRequest addHeader(String name, String value) {
         if (!headers.containsKey(name)) {
             headers.put(name, new ArrayList<>());
