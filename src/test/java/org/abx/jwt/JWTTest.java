@@ -36,17 +36,17 @@ class JWTTest {
 
     @Test
     public void doBasicTest() throws Exception {
-        String issuer = "dummy";
-        String admin = "admin";
-        String token = JWTUtils.generateToken(issuer, privateKey, 60,
-                admin);
+        String username = "dummy";
+        String role = "admin";
+        String token = JWTUtils.generateToken(username, privateKey, 60,
+                role);
         Claims claims = jwtUtils.validateToken(token);
-        Assertions.assertEquals(issuer,
-                claims.getIssuer());
-        Assertions.assertEquals(admin,
+        Assertions.assertEquals(username,
                 claims.getSubject());
-        token = JWTUtils.generateToken(issuer, privateKey, 1,
-                admin);
+        Assertions.assertEquals(role,
+                claims.get("role"));
+        token = JWTUtils.generateToken(username, privateKey, 1,
+                role);
         Thread.sleep(2000);
         Exception e = null;
         try {
@@ -63,6 +63,15 @@ class JWTTest {
         ServiceRequest req = servicesClient.get("demo","/demo");
         ServiceResponse res = servicesClient.process(req);
         Assertions.assertEquals("demo",res.asString());
+        String username = "dummy";
+        String admin = "admin";
+        String token = JWTUtils.generateToken(username, privateKey, 60,
+                admin);
+
+         req = servicesClient.get("demo","/user");
+         req.addHeader("Authorization", "Bearer " + token);
+         res = servicesClient.process(req);
+        Assertions.assertEquals(username,res.asString());
     }
 
 }

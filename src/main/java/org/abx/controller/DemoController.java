@@ -1,5 +1,6 @@
 package org.abx.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,5 +16,12 @@ public class DemoController {
     @RequestMapping("/demo")
     public String demo() {
         return "demo";
+    }
+
+
+    @PreAuthorize("permitAll()")
+    @RequestMapping("/user")
+    public String user(HttpServletRequest request) {
+        return request.getUserPrincipal().getName();
     }
 }

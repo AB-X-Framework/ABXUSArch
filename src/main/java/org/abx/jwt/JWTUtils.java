@@ -63,7 +63,7 @@ public class JWTUtils {
             String username,
             String privateKey,
             int validSeconds,
-            String content) throws Exception {
+            String role) throws Exception {
         long expirationTime = validSeconds *1000; // 1 hour in milliseconds
         byte[] decodedKey = Base64.getDecoder().decode(removePemDelimiters(privateKey));
 
@@ -71,8 +71,8 @@ public class JWTUtils {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PrivateKey key = keyFactory.generatePrivate(keySpec);
         return Jwts.builder()
-                .issuer(username)  // Subject (e.g., username)
-                .subject(content)
+                .subject(username)  // Subject (e.g., username)
+                .claim("role",role)
                 .issuedAt(new Date()) // Issued at
                 .expiration(new Date(System.currentTimeMillis() + expirationTime)) // Expiration
                 .signWith(key) // Signing algorithm and key
