@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {
         "org.abx.spring",
         "org.abx.jwt",
+        "org.abx.services",
         "org.abx.controller"})
 public class Demo {
 
