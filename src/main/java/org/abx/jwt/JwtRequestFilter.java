@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.abx.jwt.JWTUtils.Authorities;
+
 @Component
-public class JwtRequestFilter  extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -35,11 +36,11 @@ public class JwtRequestFilter  extends OncePerRequestFilter {
 
         // Check if the Authorization header contains a Bearer token
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String  jwt = authorizationHeader.substring(7); // Extract the token
+            String jwt = authorizationHeader.substring(7); // Extract the token
             try {
                 Claims claims = jwtUtils.validateToken(jwt);
                 username = claims.getSubject();
-                role = claims.get("role", List.class);
+                role = claims.get(Authorities, List.class);
             } catch (Exception e) {
                 System.out.println("Invalid JWT: " + e.getMessage());
             }
@@ -55,6 +56,7 @@ public class JwtRequestFilter  extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
     private List<GrantedAuthority> getGrantedAuthorities(final List<String> permissions) {
         final List<GrantedAuthority> authorities = new ArrayList<>();
         for (final String permission : permissions) {

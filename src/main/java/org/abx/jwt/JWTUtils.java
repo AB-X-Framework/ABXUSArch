@@ -16,6 +16,7 @@ import java.util.List;
 
 @Component
 public class JWTUtils {
+    public static final String Authorities = "authorities";
 
     @Value("${jwt.public}")
     private String publicKey;
@@ -66,7 +67,7 @@ public class JWTUtils {
         PrivateKey key = keyFactory.generatePrivate(keySpec);
         return Jwts.builder()
                 .subject(username)  // Subject (e.g., username)
-                .claim("role",role)
+                .claim(Authorities,role)
                 .issuedAt(new Date()) // Issued at
                 .expiration(new Date(System.currentTimeMillis() + expirationTime)) // Expiration
                 .signWith(key) // Signing algorithm and key

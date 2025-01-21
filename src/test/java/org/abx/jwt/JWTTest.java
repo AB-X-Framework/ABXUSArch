@@ -17,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.abx.jwt.JWTUtils.Authorities;
+
 @SpringBootTest(classes = Demo.class)
 class JWTTest {
 
@@ -46,7 +48,7 @@ class JWTTest {
         Assertions.assertEquals(username,
                 claims.getSubject());
         Assertions.assertEquals(role,
-                claims.get("role"));
+                claims.get(Authorities));
         token = JWTUtils.generateToken(username, privateKey, 1,
                 role);
         Thread.sleep(2000);
