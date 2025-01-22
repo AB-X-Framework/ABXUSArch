@@ -13,6 +13,10 @@ public class ServiceResponse {
         this.response = response;
     }
 
+    public int statusCode() {
+        return response.statusCode();
+    }
+
     public byte[] asByteArray() {
         return response.body();
     }
