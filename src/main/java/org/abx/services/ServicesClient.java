@@ -40,6 +40,14 @@ public class ServicesClient {
         return create("POST", serviceName, request);
     }
 
+    public ServiceRequest put(String serviceName, String request) throws Exception {
+        return create("PUT", serviceName, request);
+    }
+
+    public ServiceRequest patch(String serviceName, String request) throws Exception {
+        return create("PATCH", serviceName, request);
+    }
+
     public ServiceRequest create(String method, String serviceName, String request) throws Exception {
         if (!services.containsKey(serviceName)) {
             throw new Exception("Service " + serviceName + " not found");

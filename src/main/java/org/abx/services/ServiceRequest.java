@@ -32,6 +32,13 @@ public class ServiceRequest {
         return this;
     }
 
+    public void addPart(String key, String value) {
+        if (mbp == null) {
+            mbp = new MultiPartBodyPublisher();
+        }
+        mbp.addPart(key, value);
+    }
+
     public HttpRequest compile() throws URISyntaxException {
         HttpRequest.Builder builder;
         switch (method) {
