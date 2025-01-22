@@ -7,6 +7,7 @@ import org.abx.services.ServiceRequest;
 import org.abx.services.ServiceResponse;
 import org.abx.services.ServicesClient;
 import org.abx.spring.Demo;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ class JWTTest {
     @Autowired
     JWTUtils jwtUtils;
 
+    private static ConfigurableApplicationContext context;
 
     @Autowired
     ServicesClient servicesClient;
@@ -35,7 +38,7 @@ class JWTTest {
 
     @BeforeAll
     public static void setup() {
-        SpringApplication.run(Demo.class);
+        context=SpringApplication.run(Demo.class);
     }
 
     @Test
@@ -91,6 +94,10 @@ class JWTTest {
         req.jwt(token);
         res = servicesClient.process(req);
         Assertions.assertFalse(res.asBoolean());
+    }
+    @AfterAll
+    public static void teardown() {
+        context.stop();
     }
 
 }
