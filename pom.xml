@@ -74,7 +74,7 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>github-WSArch</id>
+            <id>github-ABXUSAarch</id>
             <name>GitHub OWNER Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/AB-X-Framework/ABXUSArch</url>
         </repository>
