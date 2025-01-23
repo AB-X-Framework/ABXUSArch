@@ -3,6 +3,7 @@ package org.abx.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class StreamUtils {
 
@@ -61,6 +62,23 @@ public class StreamUtils {
             }
         }
         return -1; // No match found
+    }
+
+    /**
+     * Reads from an InputStream and writes to an OutputStream.
+     *
+     * @param inputStream  The input stream to read from.
+     * @param outputStream The output stream to write to.
+     * @throws IOException If an I/O error occurs.
+     */
+    public static void copyStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+        byte[] buffer = new byte[1024]; // 1KB buffer for reading data
+        int bytesRead;
+
+        // Read from the input stream and write to the output stream in chunks
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
     }
 
     public static int indexOf(byte[] source, byte[] target, int from) {
