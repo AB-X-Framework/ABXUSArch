@@ -76,7 +76,7 @@
         <repository>
             <id>github-WSArch</id>
             <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/AB-X-Framework/WSArch</url>
+            <url>https://maven.pkg.github.com/AB-X-Framework/ABXUSArch</url>
         </repository>
     </distributionManagement>
 
