@@ -2,6 +2,7 @@ package org.abx.services;
 
 import org.springframework.http.MediaType;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -39,6 +40,10 @@ public class ServiceRequest {
 
     public void addPart(String key, File filename) throws Exception{
         addPart(key, new FileInputStream(filename), filename.getName(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
+    }
+
+    public void addPart(String key, byte[] data, String filename) {
+       addPart(key, new ByteArrayInputStream(data), filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
     }
 
     public void addPart(String key, InputStream data, String filename) {
