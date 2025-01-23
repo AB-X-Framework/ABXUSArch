@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class FrameTest implements WSService, WSClientListener {
 
+    private boolean clientAdded;
     private String incommingClient;
     private String disconnectedClient;
 
@@ -35,6 +36,9 @@ public class FrameTest implements WSService, WSClientListener {
             WSRes res = client.process(new WSReq("math/add").set("a", 2).set("b", 3));
             System.out.println("Method processed");
             Assertions.assertEquals(5, res.asInt());
+            while (!clientAdded){
+                Thread.yield();
+            }
             WSClient incommingWSClient = server.getClient(clientName);
             res = incommingWSClient.process(new WSReq("multiply/multiply").set("a", 0.5).set("b", 3));
             Assertions.assertEquals(1.5, res.asDouble(), 0.001);
@@ -50,6 +54,7 @@ public class FrameTest implements WSService, WSClientListener {
     }
 
     public void clientConnected(String clientId) {
+        clientAdded=true;
         incommingClient = clientId;
     }
 

@@ -55,8 +55,8 @@ public class WSServer extends WSEngine {
                         String clientId = wsClient.process
                                 (new WSReq("_client/getClientId")).asString();
                         wsClient.clientId = clientId;
-                        clientConnected(clientId);
                         clients.put(clientId, wsClient);
+                        clientConnected(clientId);
                     } catch (Exception e) {
                         ExceptionHandler.handleException(e);
                     }
