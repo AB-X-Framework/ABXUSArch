@@ -1,5 +1,10 @@
 package org.abx.services;
 
+import org.springframework.http.MediaType;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
@@ -30,6 +35,21 @@ public class ServiceRequest {
         }
         headers.get(name).add(value);
         return this;
+    }
+
+    public void addPart(String key, File filename) throws Exception{
+        addPart(key, new FileInputStream(filename), filename.getName(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
+    }
+
+    public void addPart(String key, InputStream data, String filename) {
+        addPart(key, data, filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+    }
+
+    public void addPart(String key, InputStream data, String filename, String contentType) {
+        if (mbp == null) {
+            mbp = new MultiPartBodyPublisher();
+        }
+        mbp.addStream(key, data, filename, contentType);
     }
 
     public void addPart(String key, String value) {
