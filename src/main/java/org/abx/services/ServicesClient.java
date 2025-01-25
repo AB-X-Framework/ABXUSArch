@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -58,7 +59,7 @@ public class ServicesClient {
     }
 
     public ServiceResponse process(ServiceRequest req) throws Exception {
-        HttpResponse<byte[]> res = client.send(req.compile(), HttpResponse.BodyHandlers.ofByteArray());
+        HttpResponse<InputStream> res = client.send(req.compile(), HttpResponse.BodyHandlers.ofInputStream());
         return new ServiceResponse(res);
     }
 }
