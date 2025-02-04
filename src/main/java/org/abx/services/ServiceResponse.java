@@ -2,13 +2,10 @@ package org.abx.services;
 
 import org.abx.util.StreamUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -29,19 +26,19 @@ public class ServiceResponse {
     }
 
     public byte[] asByteArray() throws Exception {
-        if (processedAsStream){
+        if (processedAsStream) {
             throw new IllegalStateException("Already processed as stream.");
         }
         if (processedAsArray) {
             return data;
         }
         processedAsArray = true;
-        data= StreamUtils.readByteArrayStream(response.body());
+        data = StreamUtils.readByteArrayStream(response.body());
         return data;
     }
 
     public InputStream asStream() throws Exception {
-        if (processedAsStream){
+        if (processedAsStream) {
             throw new IllegalStateException("Already processed as stream.");
         }
         if (processedAsArray) {
@@ -54,8 +51,13 @@ public class ServiceResponse {
     public String asString() throws Exception {
         return new String(asByteArray(), StandardCharsets.UTF_8);
     }
+
+    public int asInt() throws Exception {
+        return Integer.parseInt(asString());
+    }
+
     public boolean asBoolean() throws Exception {
-        return Boolean.parseBoolean( new String(asByteArray(), StandardCharsets.UTF_8));
+        return Boolean.parseBoolean(asString());
     }
 
     public JSONObject asJSONObject() throws Exception {
