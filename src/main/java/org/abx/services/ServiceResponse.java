@@ -56,6 +56,10 @@ public class ServiceResponse {
         return Integer.parseInt(asString());
     }
 
+    public long asLong() throws Exception {
+        return Long.parseLong(asString());
+    }
+
     public boolean asBoolean() throws Exception {
         return Boolean.parseBoolean(asString());
     }
