@@ -49,6 +49,10 @@ public class ServicesClient {
         return create("PATCH", serviceName, request);
     }
 
+    public ServiceRequest delete(String serviceName, String request) throws Exception {
+        return create("DELETE", serviceName, request);
+    }
+
     public ServiceRequest create(String method, String serviceName, String request) throws Exception {
         if (!services.containsKey(serviceName)) {
             throw new Exception("Service " + serviceName + " not found");
