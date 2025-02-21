@@ -38,30 +38,35 @@ public class ServiceRequest {
         return this;
     }
 
-    public void addPart(String key, File filename) throws Exception{
+    public ServiceRequest addPart(String key, File filename) throws Exception{
         addPart(key, new FileInputStream(filename), filename.getName(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        return this;
     }
 
-    public void addPart(String key, byte[] data, String filename) {
+    public ServiceRequest addPart(String key, byte[] data, String filename) {
        addPart(key, new ByteArrayInputStream(data), filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+       return this;
     }
 
-    public void addPart(String key, InputStream data, String filename) {
+    public ServiceRequest addPart(String key, InputStream data, String filename) {
         addPart(key, data, filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        return this;
     }
 
-    public void addPart(String key, InputStream data, String filename, String contentType) {
+    public ServiceRequest addPart(String key, InputStream data, String filename, String contentType) {
         if (mbp == null) {
             mbp = new MultiPartBodyPublisher();
         }
         mbp.addStream(key, data, filename, contentType);
+        return this;
     }
 
-    public void addPart(String key, String value) {
+    public ServiceRequest addPart(String key, String value) {
         if (mbp == null) {
             mbp = new MultiPartBodyPublisher();
         }
         mbp.addPart(key, value);
+        return this;
     }
 
     public HttpRequest compile() throws URISyntaxException {
