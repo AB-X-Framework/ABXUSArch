@@ -15,10 +15,15 @@ import java.util.Map;
 
 public class ServiceRequest {
 
+    protected ServicesClient client;
     private MultiPartBodyPublisher mbp;
     private final String method;
     private final String uri;
     private final HashMap<String, ArrayList<String>> headers;
+
+    public ServiceResponse process() throws Exception {
+        return client.process(this);
+    }
 
     public ServiceRequest(String method, String uri) {
         this.method = method;
@@ -38,14 +43,14 @@ public class ServiceRequest {
         return this;
     }
 
-    public ServiceRequest addPart(String key, File filename) throws Exception{
+    public ServiceRequest addPart(String key, File filename) throws Exception {
         addPart(key, new FileInputStream(filename), filename.getName(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
         return this;
     }
 
     public ServiceRequest addPart(String key, byte[] data, String filename) {
-       addPart(key, new ByteArrayInputStream(data), filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-       return this;
+        addPart(key, new ByteArrayInputStream(data), filename, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        return this;
     }
 
     public ServiceRequest addPart(String key, InputStream data, String filename) {
