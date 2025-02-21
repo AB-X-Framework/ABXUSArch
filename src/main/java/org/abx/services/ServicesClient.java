@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 @Component
 public class ServicesClient {
+    @Value("${jwt.private}")
+    private String privateKey;
 
     private HttpClient client;
 
@@ -59,6 +61,7 @@ public class ServicesClient {
         }
         String url = services.get(serviceName) + request;
         ServiceRequest req = new ServiceRequest(method, url);
+        req.client = this;
         return req;
     }
 
