@@ -15,8 +15,6 @@ import java.util.HashMap;
 
 @Component
 public class ServicesClient {
-    @Value("${jwt.private}")
-    private String privateKey;
 
     private HttpClient client;
 
