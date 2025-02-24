@@ -35,6 +35,10 @@ public class ServicesClient {
                 build();
     }
 
+    public JWTServicesClient withJWT(String token){
+        return new JWTServicesClient(this,token);
+    }
+
     public ServiceRequest get(String serviceName, String request) throws Exception {
         return create("GET", serviceName, request);
     }
