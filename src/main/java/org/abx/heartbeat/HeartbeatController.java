@@ -7,6 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 @RestController
 @RequestMapping("/heartbeat")
 public class HeartbeatController {
@@ -16,6 +20,24 @@ public class HeartbeatController {
     @RequestMapping("/alive")
     public boolean alive() {
         return true;
+    }
+
+    private byte[] cacheRequestBody(HttpServletRequest request) throws IOException {
+        InputStream inputStream = request.getInputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        return outputStream.toByteArray();
+    }
+
+    @PreAuthorize("permitAll()")
+    @RequestMapping("/postit")
+    public String postit(HttpServletRequest request) throws Exception{
+        String data= new String(cacheRequestBody(request));
+        return data;
     }
 
 

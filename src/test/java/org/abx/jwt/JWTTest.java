@@ -94,6 +94,11 @@ class JWTTest {
         req.jwt(token);
         res = servicesClient.process(req);
         Assertions.assertFalse(res.asBoolean());
+
+         req = servicesClient.post("demo", "/heartbeat/postit").
+                 setBody("datalike".getBytes());
+         res = servicesClient.process(req);
+        Assertions.assertEquals("datalike",res.asString());
     }
     @AfterAll
     public static void teardown() {
