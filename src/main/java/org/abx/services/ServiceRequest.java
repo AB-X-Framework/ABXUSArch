@@ -17,6 +17,7 @@ public class ServiceRequest {
 
     protected ServicesClient client;
     private MultiPartBodyPublisher mbp;
+    private byte[] body;
     private final String method;
     private final String uri;
     private final HashMap<String, ArrayList<String>> headers;
@@ -40,6 +41,11 @@ public class ServiceRequest {
             headers.put(name, new ArrayList<>());
         }
         headers.get(name).add(value);
+        return this;
+    }
+
+    public ServiceRequest setBody(byte[] body) {
+        this.body = body;
         return this;
     }
 
@@ -86,18 +92,30 @@ public class ServiceRequest {
                 break;
             }
             case "POST": {
-                builder = HttpRequest.newBuilder().POST(mbp.build()).setHeader("Content-Type",
-                        "multipart/form-data; boundary=" + mbp.getBoundary());
+                if (body != null) {
+                    builder = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofByteArray(body));
+                } else {
+                    builder = HttpRequest.newBuilder().POST(mbp.build()).setHeader("Content-Type",
+                            "multipart/form-data; boundary=" + mbp.getBoundary());
+                }
                 break;
             }
             case "PUT": {
-                builder = HttpRequest.newBuilder().PUT(mbp.build()).setHeader("Content-Type",
-                        "multipart/form-data; boundary=" + mbp.getBoundary());
+                if (body != null) {
+                    builder = HttpRequest.newBuilder().PUT(HttpRequest.BodyPublishers.ofByteArray(body));
+                } else {
+                    builder = HttpRequest.newBuilder().PUT(mbp.build()).setHeader("Content-Type",
+                            "multipart/form-data; boundary=" + mbp.getBoundary());
+                }
                 break;
             }
             case "PATCH": {
-                builder = HttpRequest.newBuilder().method("PATCH", mbp.build()).setHeader("Content-Type",
-                        "multipart/form-data; boundary=" + mbp.getBoundary());
+                if (body != null) {
+                    builder = HttpRequest.newBuilder().method("PATCH", HttpRequest.BodyPublishers.ofByteArray(body));
+                } else {
+                    builder = HttpRequest.newBuilder().method("PATCH", mbp.build()).setHeader("Content-Type",
+                            "multipart/form-data; boundary=" + mbp.getBoundary());
+                }
                 break;
             }
             default:
