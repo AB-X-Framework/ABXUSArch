@@ -95,7 +95,7 @@ class JWTTest {
         res = servicesClient.process(req);
         Assertions.assertFalse(res.asBoolean());
 
-         req = servicesClient.post("demo", "/heartbeat/postit").
+         req = servicesClient.patch("demo", "/heartbeat/postit").
                  setBody("datalike".getBytes());
          res = servicesClient.process(req);
         Assertions.assertEquals("datalike",res.asString());
