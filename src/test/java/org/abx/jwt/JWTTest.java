@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 
@@ -95,8 +96,9 @@ class JWTTest {
         res = servicesClient.process(req);
         Assertions.assertFalse(res.asBoolean());
 
-         req = servicesClient.patch("demo", "/heartbeat/postit").
+         req = servicesClient.post("demo", "/heartbeat/putit").
                  setBody("datalike".getBytes());
+         req.addHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded; charset=UTF-8");
          res = servicesClient.process(req);
         Assertions.assertEquals("datalike",res.asString());
     }

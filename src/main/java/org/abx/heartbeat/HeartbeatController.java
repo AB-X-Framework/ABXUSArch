@@ -34,8 +34,8 @@ public class HeartbeatController {
     }
 
     @PreAuthorize("permitAll()")
-    @RequestMapping("/postit")
-    public String postit(HttpServletRequest request) throws Exception{
+    @RequestMapping("/putit")
+    public String putit(HttpServletRequest request) throws Exception{
         String data= new String(cacheRequestBody(request));
         return data;
     }
