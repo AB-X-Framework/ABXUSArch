@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -31,6 +33,16 @@ public class ServicesClient {
         client = HttpClient.newBuilder().
                 connectTimeout(Duration.ofSeconds(20)).
                 build();
+    }
+
+    public void enableCookies(){
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL); //
+        client = HttpClient.newBuilder().
+                connectTimeout(Duration.ofSeconds(20)).
+                cookieHandler(cookieManager).
+                build();
+
     }
 
     public JWTServicesClient withJWT(String token){
