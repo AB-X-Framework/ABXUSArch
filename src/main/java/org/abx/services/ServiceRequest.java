@@ -29,6 +29,13 @@ public class ServiceRequest {
         return new ServiceResponse(res);
     }
 
+    public ServiceRequest(HttpClient client, String method, String uri) {
+        this.client = client;
+        this.method = method;
+        this.uri = uri;
+        this.headers = new HashMap<>();
+    }
+    
     public ServiceRequest(String method, String uri) {
         this.method = method;
         this.uri = uri;
