@@ -3,15 +3,11 @@ package org.abx.ws.msg;
 import org.abx.util.Pair;
 import org.abx.util.StreamUtils;
 import org.abx.ws.frames.BinaryFrame;
-import org.abx.ws.frames.Frame;
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class WSRes extends WSMsg {
 

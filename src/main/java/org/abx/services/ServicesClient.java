@@ -1,9 +1,7 @@
 package org.abx.services;
 
 import jakarta.annotation.PostConstruct;
-import org.apache.coyote.Request;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -75,7 +73,7 @@ public class ServicesClient {
         }
         String url = services.get(serviceName) + request;
         ServiceRequest req = new ServiceRequest(method, url);
-        req.client = this;
+        req.client = client;
         return req;
     }
 

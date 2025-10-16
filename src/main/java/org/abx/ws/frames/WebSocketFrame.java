@@ -6,7 +6,6 @@ import org.abx.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -81,37 +80,6 @@ public class WebSocketFrame {
         return payloadLength;
     }
 
-    private static String readTextFrame(InputStream inputStream, boolean fin) throws IOException {
-        int b = inputStream.read();
-        final boolean frameMasked = (b & FRAME_MASKED) != 0;
-        int payloadLength = getPayloadSize(inputStream, b);
-
-        final byte[] frameMaskingKey = new byte[4];
-
-        if (frameMasked) {
-            inputStream.read(frameMaskingKey);
-        }
-
-        final StringBuilder payloadBuffer = new StringBuilder(payloadLength);
-
-        int read = 0;
-        if (frameMasked) {
-            do {
-                payloadBuffer.append(((char) ((inputStream.read() ^ frameMaskingKey[read % 4]) & 127)));
-            } while (++read < payloadLength);
-        } else {
-            // support unmasked frames for testing.
-
-            do {
-                payloadBuffer.append((char) inputStream.read());
-            } while (++read < payloadLength);
-        }
-
-        if (!fin) {
-            payloadBuffer.append(new String(((BinaryFrame) readFrame(inputStream)).getByteArray()));
-        }
-        return payloadBuffer.toString();
-    }
 
     public static byte[] readBinaryFrame(InputStream inputStream, boolean fin) throws IOException {
         int b = inputStream.read();
@@ -149,16 +117,6 @@ public class WebSocketFrame {
         return buf;
     }
 
-    private static void writeTextFrame(OutputStream outputStream, final String txt) throws IOException {
-        final byte[] strBytes = txt.getBytes(StandardCharsets.UTF_8);
-        final int len = strBytes.length;
-        outputStream.write(0b10000001);
-        writePayloadSize(outputStream, len);
-        for (byte strByte : strBytes) {
-            outputStream.write(strByte);
-        }
-        outputStream.flush();
-    }
 
     /**
      * Sets the payload size based on the byte2 (byte after the opcode). When

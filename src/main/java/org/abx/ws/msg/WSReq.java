@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public class WSReq extends WSMsg{
 

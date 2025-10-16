@@ -8,22 +8,25 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ServiceRequest {
 
-    protected ServicesClient client;
+    protected HttpClient client;
     private MultiPartBodyPublisher mbp;
     private byte[] body;
     private final String method;
     private final String uri;
     private final HashMap<String, ArrayList<String>> headers;
 
-    public ServiceResponse process() throws Exception {
-        return client.process(this);
+    public ServiceResponse process(ServiceRequest req) throws Exception {
+        HttpResponse<InputStream> res = client.send(req.compile(), HttpResponse.BodyHandlers.ofInputStream());
+        return new ServiceResponse(res);
     }
 
     public ServiceRequest(String method, String uri) {

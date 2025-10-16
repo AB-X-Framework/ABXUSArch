@@ -3,7 +3,6 @@ package org.abx.ws;
 import org.abx.ws.annotations.WSMethod;
 import org.abx.ws.annotations.WSService;
 import org.abx.ws.msg.WSReq;
-import org.abx.ws.msg.WSRes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,6 @@ public class NotFoundTest implements WSService {
                 client.process(new WSReq("math/throwError").set("a", 2).set("b", 3));
             } catch (Exception e) {
                 error = true;
-                String text = e.getMessage();
                 Assertions.assertTrue( e.getMessage().contains("java.lang.Exception: Expected error"),e.getMessage());
             }
             Assertions.assertTrue(error);
